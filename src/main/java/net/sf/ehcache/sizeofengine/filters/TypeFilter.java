@@ -29,9 +29,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TypeFilter implements SizeOfFilter {
 
-  private final ConcurrentHashMap<Class, Object> classesIgnored = new ConcurrentHashMap<Class, Object>();
-  private final ConcurrentHashMap<Class, Object> superClasses = new ConcurrentHashMap<Class, Object>();
-  private final ConcurrentHashMap<Class, ConcurrentMap<Field, Object>> fieldsIgnored = new ConcurrentHashMap<Class, ConcurrentMap<Field, Object>>();
+  private final ConcurrentHashMap<Class<?>, Object> classesIgnored = new ConcurrentHashMap<Class<?>, Object>();
+  private final ConcurrentHashMap<Class<?>, Object> superClasses = new ConcurrentHashMap<Class<?>, Object>();
+  private final ConcurrentHashMap<Class<?>, ConcurrentMap<Field, Object>> fieldsIgnored = new ConcurrentHashMap<Class<?>, ConcurrentMap<Field, Object>>();
 
   @Override
   public Collection<Field> filterFields(final Class<?> klazz, final Collection<Field> fields) {
@@ -49,7 +49,7 @@ public class TypeFilter implements SizeOfFilter {
   @Override
   public boolean filterClass(final Class<?> klazz) {
     if (!classesIgnored.containsKey(klazz)) {
-      for (Class aClass : superClasses.keySet()) {
+      for (Class<?> aClass : superClasses.keySet()) {
         if (aClass.isAssignableFrom(klazz)) {
           classesIgnored.put(klazz, this);
           return false;
