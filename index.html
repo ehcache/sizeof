@@ -28,28 +28,61 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+<h2>
+<a name="what-is-this" class="anchor" href="#what-is-this"><span class="octicon octicon-link"></span></a>What is this?</h2>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Simply by being on your application's classpath, ehcache-sizeofengine will automagically be picked up by <a href="http://www.ehcache.org">Ehcache</a>.
+It replaces the SizeOfEngine implementation that ships with Ehcache (2.8.0 onwards) with the EhcacheSizeOfEngine implementation of this project, which lets you control what is then being sized.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h2>
+<a name="using-existing-filter-configurators" class="anchor" href="#using-existing-filter-configurators"><span class="octicon octicon-link"></span></a>Using existing filter configurators</h2>
+
+<p>You simply need to add the jars of the modules that you want along side this project's jar</p>
+
+<ul>
+<li>Hibernate
+
+<ul>
+<li>link to project</li>
+</ul>
+</li>
+<li>Groovy
+
+<ul>
+<li>link to project</li>
+</ul>
+</li>
+</ul><h2>
+<a name="configuring-the-filter-yourself" class="anchor" href="#configuring-the-filter-yourself"><span class="octicon octicon-link"></span></a>Configuring the Filter yourself</h2>
+
+<p>In order to ignore fields or instances of certain classes when sizing object graphs, you'll have to</p>
+
+<ol>
+<li>Create a <a href="http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html">ServiceLoader</a> project, for <a href="http://terracotta-oss.github.io/ehcache-sizeofengine/apidocs/net/sf/ehcache/sizeofengine/FilterConfigurator.html">net.sf.ehcache.sizeofengine.FilterConfigurator</a>
+
+<ul>
+<li>Have your jar contain a text file named META-INF/services/net.sf.ehcache.sizeofengine.FilterConfigurator</li>
+<li>The file should contain the fully qualified class name of your implementation</li>
+</ul>
+</li>
+<li>Implement <a href="http://terracotta-oss.github.io/ehcache-sizeofengine/apidocs/net/sf/ehcache/sizeofengine/FilterConfigurator.html">FilterConfigurator</a>'s configure method to configure the <a href="http://terracotta-oss.github.io/ehcache-sizeofengine/apidocs/net/sf/ehcache/sizeofengine/Filter.html">Filter</a> of classes and fields</li>
+<li>put your jar on your application's classpath, along side of the ehcache jar and this ehcache-sizeofengine jar</li>
+<li>Use Ehcache's <a href="http://ehcache.org/documentation/arc">Automatic Resource Control</a> for your heap tier</li>
+</ol><h2>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<pre><code>    public static final class StupidConfigurator implements FilterConfigurator {
+
+        @Override
+        public void configure(final Filter ehcacheFilter) {
+            // Will not size any instance of Number, and given the second arg, no subtype neither
+            ehcacheFilter.ignoreInstancesOf(Number.class, false);
+        }
+    }
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
+<p>There can be as many FilterConfigurator on the classpath as required, they'll have configure the filter once.
+The Filter is shared across all SizeOfEngine instances created.</p>
 <h3>
 <a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
 
