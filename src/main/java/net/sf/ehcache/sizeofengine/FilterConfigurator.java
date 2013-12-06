@@ -17,9 +17,15 @@
 package net.sf.ehcache.sizeofengine;
 
 /**
+ * A configurator, instantiated by the {@link java.util.ServiceLoader}, that will get to configure the {@link Filter}
+ *
  * @author Alex Snaps
  */
 public interface FilterConfigurator {
 
+  /**
+   * Invoked by the framework to let this instance configure the filter
+   * @param filter the filter managed by the framework
+   */
   public void configure(Filter filter);
 }
