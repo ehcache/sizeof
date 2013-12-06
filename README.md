@@ -4,8 +4,8 @@ ehcache-sizeofengine
 What is this?
 -------------
 
-Simply by being on your application's classpath, ehcache-sizeofengine will automagically be picked up by Ehcache.
-It replaces the SizeOfEngine implementation that ships with Ehcache with the EhcacheSizeOfEngine implementation of this project, which lets you control what is then being sized.
+Simply by being on your application's classpath, ehcache-sizeofengine will automagically be picked up by [Ehcache](http://www.ehcache.org).
+It replaces the SizeOfEngine implementation that ships with Ehcache (2.8.0 onwards) with the EhcacheSizeOfEngine implementation of this project, which lets you control what is then being sized.
 
 Using existing filter configurators
 -----------------------------------
@@ -21,12 +21,12 @@ Configuring the Filter yourself
 -------------------------------
 
 In order to ignore fields or instances of certain classes when sizing object graphs, you'll have to
- 1. Create a ServiceLoader project, for net.sf.ehcache.sizeofengine.FilterConfigurator
+ 1. Create a [ServiceLoader](http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html) project, for net.sf.ehcache.sizeofengine.FilterConfigurator
    - Have your jar contain a text file named META-INF/services/net.sf.ehcache.sizeofengine.FilterConfigurator
    - The file should contain the fully qualified class name of your implementation
  2. Implement net.sf.ehcache.sizeofengine.FilterConfigurator's configure method to configure the filtering of classes and fields
  3. put your jar on your application's classpath, along side of the ehcache jar and this ehcache-sizeofengine jar
- 4. Use ehcache's automatic resource control
+ 4. Use Ehcache's [Automatic Resource Control](http://ehcache.org/documentation/arc) for your heap tier
 
 Example
 -------
