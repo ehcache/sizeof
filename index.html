@@ -4,31 +4,41 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Ehcache-sizeofengine by Terracotta-OSS</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
     <div class="wrapper">
-      <header>
-        <h1>Ehcache-sizeofengine</h1>
-        <p>Configurable sizeOf engine for Ehcache</p>
 
-        <p class="view"><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine">View the Project on GitHub <small>Terracotta-OSS/ehcache-sizeofengine</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/Terracotta-OSS/ehcache-sizeofengine">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
       <section>
-<h2>
+        <div id="title">
+          <h1>Ehcache-sizeofengine</h1>
+          <p>Configurable sizeOf engine for Ehcache</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/Terracotta-OSS">Terracotta-OSS</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h2>
 <a name="what-is-this" class="anchor" href="#what-is-this"><span class="octicon octicon-link"></span></a>What is this?</h2>
 
 <p>Simply by being on your application's classpath, ehcache-sizeofengine will automagically be picked up by <a href="http://www.ehcache.org">Ehcache</a>.
@@ -83,22 +93,10 @@ It replaces the SizeOfEngine implementation that ships with Ehcache (2.8.0 onwar
 
 <p>There can be as many FilterConfigurator on the classpath as required, they'll have configure the filter once.
 The Filter is shared across all SizeOfEngine instances created.</p>
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>Alex Snaps (<a href="https://github.com/alexsnaps" class="user-mention">@alexsnaps</a>)</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/Terracotta-OSS">Terracotta-OSS</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
