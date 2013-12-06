@@ -1,2 +1,44 @@
 ehcache-sizeofengine
 ====================
+
+What is this?
+-------------
+
+Simply by being on your application's classpath, ehcache-sizeofengine will automagically be picked up by Ehcache.
+It replaces the SizeOfEngine implementation that ships with Ehcache with the EhcacheSizeOfEngine implementation of this project, which lets you control what is then being sized.
+
+Using existing filter configurators
+-----------------------------------
+
+You simply need to add the jars of the modules that you want along side this project's jar
+
+ - Hibernate
+    - link to project
+ - Groovy
+    - link to project
+
+Configuring the Filter yourself
+-------------------------------
+
+In order to ignore fields or instances of certain classes when sizing object graphs, you'll have to
+ 1. Create a ServiceLoader project, for net.sf.ehcache.sizeofengine.FilterConfigurator
+   - Have your jar contain a text file named META-INF/services/net.sf.ehcache.sizeofengine.FilterConfigurator
+   - The file should contain the fully qualified class name of your implementation
+ 2. Implement net.sf.ehcache.sizeofengine.FilterConfigurator's configure method to configure the filtering of classes and fields
+ 3. put your jar on your application's classpath, along side of the ehcache jar and this ehcache-sizeofengine jar
+ 4. Use ehcache's automatic resource control
+
+Example
+-------
+
+        public static final class StupidConfigurator implements FilterConfigurator {
+
+            @Override
+            public void configure(final Filter ehcacheFilter) {
+                // Will not size any instance of Number, and given the second arg, no subtype neither
+                ehcacheFilter.ignoreInstancesOf(Number.class, false);
+            }
+        }
+
+There can be as many FilterConfigurator on the classpath as required, they'll have configure the filter once.
+The Filter is shared across all SizeOfEngine instances created.
