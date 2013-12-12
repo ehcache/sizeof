@@ -13,7 +13,8 @@ Using existing filter configurators
 You simply need to add the jars of the modules that you want along side this project's jar
 
  - Hibernate
-    - link to project
+    - [https://github.com/alexsnaps/ehcache-sizeofengine-hibernate](https://github.com/alexsnaps/ehcache-sizeofengine-hibernate v4+)
+    - [https://github.com/alexsnaps/ehcache-sizeofengine-hibernate3](https://github.com/alexsnaps/ehcache-sizeofengine-hibernate3 v3+)
  - Groovy
     - [https://github.com/alexsnaps/ehcache-sizeofengine-groovy](https://github.com/alexsnaps/ehcache-sizeofengine-groovy)
 
