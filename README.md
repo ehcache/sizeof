@@ -15,7 +15,7 @@ You simply need to add the jars of the modules that you want along side this pro
  - Hibernate
     - link to project
  - Groovy
-    - link to project
+    - [https://github.com/alexsnaps/ehcache-sizeofengine-groovy](https://github.com/alexsnaps/ehcache-sizeofengine-groovy)
 
 Configuring the Filter yourself
 -------------------------------
