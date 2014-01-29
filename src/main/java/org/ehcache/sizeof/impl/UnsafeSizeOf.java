@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import static net.sf.ehcache.pool.sizeof.JvmInformation.CURRENT_JVM_INFORMATION;
+import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 
 /**
  * {@link sun.misc.Unsafe#theUnsafe} based sizeOf measurement

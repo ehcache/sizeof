@@ -26,7 +26,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Stack;
 
-import static net.sf.ehcache.pool.sizeof.JvmInformation.CURRENT_JVM_INFORMATION;
+import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 
 /**
  * SizeOf that uses reflection to measure on heap size of object graphs
@@ -52,7 +52,7 @@ public class ReflectionSizeOf extends SizeOf {
      *
      * @param fieldFilter The filter to apply
      * @see #ReflectionSizeOf(SizeOfFilter, boolean)
-     * @see net.sf.ehcache.pool.sizeof.filter.SizeOfFilter
+     * @see SizeOfFilter
      */
     public ReflectionSizeOf(SizeOfFilter fieldFilter) {
         this(fieldFilter, true);

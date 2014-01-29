@@ -16,10 +16,8 @@
 
 package org.ehcache.sizeof;
 
-
-import net.sf.ehcache.pool.Size;
-import net.sf.ehcache.util.WeakIdentityConcurrentMap;
 import org.ehcache.sizeof.filters.SizeOfFilter;
+import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

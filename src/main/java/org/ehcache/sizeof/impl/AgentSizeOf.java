@@ -19,7 +19,7 @@ package org.ehcache.sizeof.impl;
 import org.ehcache.sizeof.SizeOf;
 import org.ehcache.sizeof.filters.SizeOfFilter;
 
-import static net.sf.ehcache.pool.sizeof.JvmInformation.CURRENT_JVM_INFORMATION;
+import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 
 /**
  * SizeOf implementation that relies on a Java agent to be loaded to do the measurement

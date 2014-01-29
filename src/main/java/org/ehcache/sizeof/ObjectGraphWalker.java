@@ -16,9 +16,8 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.sizeof.MaxDepthExceededException;
-import net.sf.ehcache.util.WeakIdentityConcurrentMap;
 import org.ehcache.sizeof.filters.SizeOfFilter;
+import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,73 +123,68 @@ final class ObjectGraphWalker {
         }
         long result = 0;
         boolean warned = false;
-        try {
-            Stack<Object> toVisit = new Stack<Object>();
-            IdentityHashMap<Object, Object> visited = new IdentityHashMap<Object, Object>();
+        Stack<Object> toVisit = new Stack<Object>();
+        IdentityHashMap<Object, Object> visited = new IdentityHashMap<Object, Object>();
 
-            if (root != null) {
-                if (traversalDebugMessage != null) {
-                    traversalDebugMessage.append("visiting ");
-                }
-                for (Object object : root) {
-                    nullSafeAdd(toVisit, object);
-                    if (traversalDebugMessage != null && object != null) {
-                        traversalDebugMessage.append(object.getClass().getName())
-                            .append("@").append(System.identityHashCode(object)).append(", ");
-                    }
-                }
-                if (traversalDebugMessage != null) {
-                    traversalDebugMessage.deleteCharAt(traversalDebugMessage.length() - 2).append("\n");
+        if (root != null) {
+            if (traversalDebugMessage != null) {
+                traversalDebugMessage.append("visiting ");
+            }
+            for (Object object : root) {
+                nullSafeAdd(toVisit, object);
+                if (traversalDebugMessage != null && object != null) {
+                    traversalDebugMessage.append(object.getClass().getName())
+                        .append("@").append(System.identityHashCode(object)).append(", ");
                 }
             }
+            if (traversalDebugMessage != null) {
+                traversalDebugMessage.deleteCharAt(traversalDebugMessage.length() - 2).append("\n");
+            }
+        }
 
-            while (!toVisit.isEmpty()) {
-                warned = checkMaxDepth(maxDepth, abortWhenMaxDepthExceeded, warned, visited);
+        while (!toVisit.isEmpty()) {
+            warned = checkMaxDepth(maxDepth, abortWhenMaxDepthExceeded, warned, visited);
 
-                Object ref = toVisit.pop();
+            Object ref = toVisit.pop();
 
-                if (visited.containsKey(ref)) {
-                    continue;
+            if (visited.containsKey(ref)) {
+                continue;
+            }
+
+            Class<?> refClass = ref.getClass();
+            if (!isSharedFlyweight(ref) && shouldWalkClass(refClass)) {
+                if (refClass.isArray() && !refClass.getComponentType().isPrimitive()) {
+                    for (int i = 0; i < Array.getLength(ref); i++) {
+                        nullSafeAdd(toVisit, Array.get(ref, i));
+                    }
+                } else {
+                    for (Field field : getFilteredFields(refClass)) {
+                        try {
+                            nullSafeAdd(toVisit, field.get(ref));
+                        } catch (IllegalAccessException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                 }
 
-                Class<?> refClass = ref.getClass();
-                if (!isSharedFlyweight(ref) && shouldWalkClass(refClass)) {
-                    if (refClass.isArray() && !refClass.getComponentType().isPrimitive()) {
-                        for (int i = 0; i < Array.getLength(ref); i++) {
-                            nullSafeAdd(toVisit, Array.get(ref, i));
-                        }
-                    } else {
-                        for (Field field : getFilteredFields(refClass)) {
-                            try {
-                                nullSafeAdd(toVisit, field.get(ref));
-                            } catch (IllegalAccessException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        }
-                    }
-
-                    long visitSize = calculateSize(ref);
-                    if (traversalDebugMessage != null) {
-                        traversalDebugMessage.append("  ").append(visitSize).append("b\t\t")
-                            .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
-                    }
-                    result += visitSize;
-                } else if (traversalDebugMessage != null) {
-                    traversalDebugMessage.append("  ignored\t")
+                long visitSize = calculateSize(ref);
+                if (traversalDebugMessage != null) {
+                    traversalDebugMessage.append("  ").append(visitSize).append("b\t\t")
                         .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
                 }
-                visited.put(ref, null);
+                result += visitSize;
+            } else if (traversalDebugMessage != null) {
+                traversalDebugMessage.append("  ignored\t")
+                    .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
             }
-
-            if (traversalDebugMessage != null) {
-                traversalDebugMessage.append("Total size: ").append(result).append(" bytes\n");
-                LOG.debug(traversalDebugMessage.toString());
-            }
-            return result;
-        } catch (MaxDepthExceededException we) {
-            we.addToMeasuredSize(result);
-            throw we;
+            visited.put(ref, null);
         }
+
+        if (traversalDebugMessage != null) {
+            traversalDebugMessage.append("Total size: ").append(result).append(" bytes\n");
+            LOG.debug(traversalDebugMessage.toString());
+        }
+        return result;
     }
 
     private long calculateSize(Object ref) {
@@ -207,7 +201,7 @@ final class ObjectGraphWalker {
                                   final IdentityHashMap<Object, Object> visited) {
         if (visited.size() >= maxDepth) {
             if (abortWhenMaxDepthExceeded) {
-                throw new MaxDepthExceededException(MessageFormat.format(ABORT_MESSAGE, maxDepth));
+                throw new IllegalArgumentException(MessageFormat.format(ABORT_MESSAGE, maxDepth));
             } else if (!warned) {
                 LOG.warn(MessageFormat.format(CONTINUE_MESSAGE, maxDepth));
                 warned = true;

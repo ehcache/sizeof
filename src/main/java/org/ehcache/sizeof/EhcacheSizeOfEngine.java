@@ -85,7 +85,8 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
     public Size sizeOf(final Object key, final Object value, final Object container) {
         Size size;
         try {
-            size = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), key, value, container);
+            org.ehcache.sizeof.Size ourSize = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), key, value, container);
+            size = new Size(ourSize.getCalculated(), ourSize.isExact());
         } catch (MaxDepthExceededException e) {
             LOG.warn(e.getMessage());
             LOG.warn("key type: " + key.getClass().getName());
