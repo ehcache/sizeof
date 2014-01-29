@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package net.sf.ehcache.sizeofengine;
+package org.ehcache.sizeof;
 
 import net.sf.ehcache.pool.SizeOfEngineFactory;
 
@@ -23,22 +23,22 @@ import net.sf.ehcache.pool.SizeOfEngineFactory;
  */
 public class EhcacheSizeOfEngineFactory implements SizeOfEngineFactory {
 
-  private final EhcacheFilterSource ehcacheFilterSource;
+    private final EhcacheFilterSource ehcacheFilterSource;
 
-  public EhcacheSizeOfEngineFactory() {
-    this(new EhcacheFilterSource(true));
-  }
+    public EhcacheSizeOfEngineFactory() {
+        this(new EhcacheFilterSource(true));
+    }
 
-  public EhcacheSizeOfEngineFactory(final EhcacheFilterSource ehcacheFilterSource) {
-    this.ehcacheFilterSource = ehcacheFilterSource;
-  }
+    public EhcacheSizeOfEngineFactory(final EhcacheFilterSource ehcacheFilterSource) {
+        this.ehcacheFilterSource = ehcacheFilterSource;
+    }
 
-  @Override
-  public EhcacheSizeOfEngine createSizeOfEngine(final int maxDepth, final boolean abort, final boolean silent) {
-    return new EhcacheSizeOfEngine(new Configuration(maxDepth, abort, silent, ehcacheFilterSource.getFilters()));
-  }
+    @Override
+    public EhcacheSizeOfEngine createSizeOfEngine(final int maxDepth, final boolean abort, final boolean silent) {
+        return new EhcacheSizeOfEngine(new Configuration(maxDepth, abort, silent, ehcacheFilterSource.getFilters()));
+    }
 
-  public Filter getFilter() {
-    return ehcacheFilterSource;
-  }
+    public Filter getFilter() {
+        return ehcacheFilterSource;
+    }
 }

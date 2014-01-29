@@ -1,4 +1,4 @@
-package net.sf.ehcache.sizeofengine;
+package org.ehcache.sizeof;
 
 import net.sf.ehcache.pool.sizeof.filter.AnnotationSizeOfFilter;
 import net.sf.ehcache.pool.sizeof.filter.SizeOfFilter;

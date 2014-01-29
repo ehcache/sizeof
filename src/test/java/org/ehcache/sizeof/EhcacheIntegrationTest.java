@@ -1,4 +1,4 @@
-package net.sf.ehcache.sizeofengine;
+package org.ehcache.sizeof;
 
 import net.sf.ehcache.pool.SizeOfEngine;
 import net.sf.ehcache.pool.SizeOfEngineLoader;

@@ -1,1 +1,1 @@
-net.sf.ehcache.sizeofengine.EhcacheSizeOfEngineFactory
+org.ehcache.sizeof.EhcacheSizeOfEngineFactory

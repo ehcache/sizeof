@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package net.sf.ehcache.sizeofengine;
+package org.ehcache.sizeof;
 
 /**
  * A configurator, instantiated by the {@link java.util.ServiceLoader}, that will get to configure the {@link Filter}
