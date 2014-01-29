@@ -14,23 +14,29 @@
  *  limitations under the License.
  */
 
-package org.ehcache.sizeof;
+package org.ehcache.sizeof.impl;
 
-import net.sf.ehcache.pool.SizeOfEngine;
-import net.sf.ehcache.pool.SizeOfEngineLoader;
-import org.junit.Test;
+import org.ehcache.sizeof.filters.SizeOfFilter;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
  * @author Alex Snaps
  */
-public class EhcacheIntegrationTest {
+class PassThroughFilter implements SizeOfFilter {
 
-  @Test
-  public void testEhcacheUsesOurImplementation() {
-    final SizeOfEngine sizeOfEngine = SizeOfEngineLoader.newSizeOfEngine(10, false, false);
-    assertThat(sizeOfEngine, instanceOf(EhcacheSizeOfEngine.class));
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public Collection<Field> filterFields(Class<?> klazz, Collection<Field> fields) {
+        return fields;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean filterClass(Class<?> klazz) {
+        return true;
+    }
 }

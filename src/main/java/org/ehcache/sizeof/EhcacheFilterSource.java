@@ -16,8 +16,8 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.sizeof.filter.AnnotationSizeOfFilter;
-import net.sf.ehcache.pool.sizeof.filter.SizeOfFilter;
+import org.ehcache.sizeof.filters.AnnotationSizeOfFilter;
+import org.ehcache.sizeof.filters.SizeOfFilter;
 import org.ehcache.sizeof.filters.TypeFilter;
 
 import java.lang.reflect.Field;

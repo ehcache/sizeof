@@ -16,7 +16,7 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.sizeof.filter.SizeOfFilter;
+import org.ehcache.sizeof.filters.SizeOfFilter;
 
 import java.util.ArrayList;
 import java.util.Collections;

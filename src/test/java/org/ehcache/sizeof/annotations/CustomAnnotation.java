@@ -14,23 +14,23 @@
  *  limitations under the License.
  */
 
-package org.ehcache.sizeof;
+package org.ehcache.sizeof.annotations;
 
-import net.sf.ehcache.pool.SizeOfEngine;
-import net.sf.ehcache.pool.SizeOfEngineLoader;
-import org.junit.Test;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD, ElementType.TYPE, ElementType.PACKAGE })
+public @interface CustomAnnotation {
+    boolean deprecated() default true;
 
-/**
- * @author Alex Snaps
- */
-public class EhcacheIntegrationTest {
+    short differentReturnType() default 10;
 
-  @Test
-  public void testEhcacheUsesOurImplementation() {
-    final SizeOfEngine sizeOfEngine = SizeOfEngineLoader.newSizeOfEngine(10, false, false);
-    assertThat(sizeOfEngine, instanceOf(EhcacheSizeOfEngine.class));
-  }
+    Class aClass() default Integer.class;
+
+    ExampleEnum anEnum() default ExampleEnum.TWO;
+
+    Deprecated anAnnotation() default @Deprecated;
 }
