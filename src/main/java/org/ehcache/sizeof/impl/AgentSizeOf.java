@@ -36,13 +36,13 @@ public class AgentSizeOf extends SizeOf {
      */
     public static final String BYPASS_LOADING = "net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass";
 
-    private static final boolean AGENT_LOADED = !Boolean.getBoolean(BYPASS_LOADING); // && AgentLoader.loadAgent();
+    private static final boolean AGENT_LOADED = !Boolean.getBoolean(BYPASS_LOADING) && AgentLoader.loadAgent();
 
     /**
      * Builds a new SizeOf that will not filter fields and will cache reflected fields
      *
      * @throws UnsupportedOperationException If agent couldn't be loaded or isn't present
-     * @see #AgentSizeOf(net.sf.ehcache.pool.sizeof.filter.SizeOfFilter, boolean)
+     * @see #AgentSizeOf(SizeOfFilter, boolean)
      */
     public AgentSizeOf() throws UnsupportedOperationException {
         this(new PassThroughFilter());
@@ -77,7 +77,7 @@ public class AgentSizeOf extends SizeOf {
 
     @Override
     public long sizeOf(Object obj) {
-        final long measuredSize = 0L; //AgentLoader.agentSizeOf(obj);
+        final long measuredSize = AgentLoader.agentSizeOf(obj);
         return Math.max(CURRENT_JVM_INFORMATION.getMinimumObjectSize(),
             measuredSize + CURRENT_JVM_INFORMATION.getAgentSizeOfAdjustment());
     }

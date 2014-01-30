@@ -27,6 +27,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>1.7.1</version>
@@ -34,4 +40,43 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>create-agent-jar</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                def jarFile = new File(project.build.directory, "classes/org/ehcache/sizeof/impl/sizeof-agent.jar");
+                                def agentClass = "/org/ehcache/sizeof/impl/SizeOfAgent.class"
+                                def rootDir = project.basedir.getAbsolutePath() + "/src/hidden/resources";
+                                ant.move(file: new File(project.build.outputDirectory, agentClass),
+                                        tofile: new File(rootDir, agentClass))
+
+                                ant.jar(destfile: jarFile, basedir: new File(rootDir).getAbsolutePath(), manifest: new File(rootDir, "META-INF/MANIFEST.MF"))
+
+                                ant.delete(file: new File(rootDir, agentClass))
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <forkMode>always</forkMode>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

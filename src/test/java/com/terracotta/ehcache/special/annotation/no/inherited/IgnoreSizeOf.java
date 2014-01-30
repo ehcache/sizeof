@@ -14,29 +14,14 @@
  *  limitations under the License.
  */
 
-package org.ehcache.sizeof.impl;
+package com.terracotta.ehcache.special.annotation.no.inherited;
 
-import org.ehcache.sizeof.filters.SizeOfFilter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-
-/**
- * @author Alex Snaps
- */
-public class PassThroughFilter implements SizeOfFilter {
-
-    /**
-     * {@inheritDoc}
-     */
-    public Collection<Field> filterFields(Class<?> klazz, Collection<Field> fields) {
-        return fields;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean filterClass(Class<?> klazz) {
-        return true;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD, ElementType.TYPE, ElementType.PACKAGE })
+public @interface IgnoreSizeOf {
 }
