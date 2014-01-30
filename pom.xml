@@ -63,7 +63,7 @@
 
                                 ant.jar(destfile: jarFile, basedir: new File(rootDir).getAbsolutePath(), manifest: new File(rootDir, "META-INF/MANIFEST.MF"))
 
-                                ant.delete(file: new File(rootDir, agentClass))
+                                ant.delete(dir: new File(rootDir, "/org"))
                             </source>
                         </configuration>
                     </execution>
