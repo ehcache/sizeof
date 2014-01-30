@@ -30,6 +30,7 @@ import static org.ehcache.sizeof.impl.JvmInformation.UNKNOWN_64_BIT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.StringContains.containsString;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 
 /**
@@ -55,6 +56,11 @@ public class SizeOfTest extends AbstractSizeOfTest {
     }
 
     private final Collection<AssertionError> sizeOfFailures = new LinkedList<AssertionError>();
+
+    @Test
+    public void testCreatesSizeOfEngine() {
+        assertTrue(SizeOf.newInstance().sizeOf(new Object()) > 0);
+    }
 
     @Test
     public void testSizeOf() throws Exception {
