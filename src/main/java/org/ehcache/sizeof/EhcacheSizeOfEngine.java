@@ -19,10 +19,6 @@ package org.ehcache.sizeof;
 import net.sf.ehcache.pool.Size;
 import net.sf.ehcache.pool.SizeOfEngine;
 import net.sf.ehcache.pool.sizeof.MaxDepthExceededException;
-import org.ehcache.sizeof.filters.CombinationSizeOfFilter;
-import org.ehcache.sizeof.impl.AgentSizeOf;
-import org.ehcache.sizeof.impl.ReflectionSizeOf;
-import org.ehcache.sizeof.impl.UnsafeSizeOf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,31 +37,7 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
 
     public EhcacheSizeOfEngine(Configuration cfg) {
         this.cfg = cfg;
-        SizeOf bestSizeOf;
-        try {
-            bestSizeOf = new AgentSizeOf(new CombinationSizeOfFilter(cfg.getFilters()));
-            if (!cfg.isSilent()) {
-                LOG.info("using Agent sizeof engine");
-            }
-        } catch (UnsupportedOperationException e) {
-            try {
-                bestSizeOf = new UnsafeSizeOf(new CombinationSizeOfFilter(cfg.getFilters()));
-                if (!cfg.isSilent()) {
-                    LOG.info("using Unsafe sizeof engine");
-                }
-            } catch (UnsupportedOperationException f) {
-                try {
-                    bestSizeOf = new ReflectionSizeOf(new CombinationSizeOfFilter(cfg.getFilters()));
-                    if (!cfg.isSilent()) {
-                        LOG.info("using Reflection sizeof engine");
-                    }
-                } catch (UnsupportedOperationException g) {
-                    throw new UnsupportedOperationException("A suitable SizeOf engine could not be loaded: " + e + ", " + f + ", " + g);
-                }
-            }
-        }
-
-        this.sizeOf = bestSizeOf;
+        this.sizeOf = SizeOf.newInstance(cfg.getFilters());
     }
 
     public Configuration getConfiguration() {

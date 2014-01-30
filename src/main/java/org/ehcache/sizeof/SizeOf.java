@@ -16,10 +16,12 @@
 
 package org.ehcache.sizeof;
 
+import org.ehcache.sizeof.filters.CombinationSizeOfFilter;
 import org.ehcache.sizeof.filters.SizeOfFilter;
+import org.ehcache.sizeof.impl.AgentSizeOf;
+import org.ehcache.sizeof.impl.ReflectionSizeOf;
+import org.ehcache.sizeof.impl.UnsafeSizeOf;
 import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstract sizeOf for Java. It will rely on a proper sizeOf to measure sizes of entire object graphs
@@ -27,8 +29,6 @@ import org.slf4j.LoggerFactory;
  * @author Alex Snaps
  */
 public abstract class SizeOf {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SizeOf.class.getName());
 
     private final ObjectGraphWalker walker;
 
@@ -69,6 +69,23 @@ public abstract class SizeOf {
      */
     public Size deepSizeOf(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... obj) {
         return new Size(walker.walk(maxDepth, abortWhenMaxDepthExceeded, obj), true);
+    }
+
+    public static SizeOf newInstance(final SizeOfFilter... filters) {
+        final SizeOfFilter filter = new CombinationSizeOfFilter(filters);
+        try {
+            return new AgentSizeOf(filter);
+        } catch (UnsupportedOperationException e) {
+            try {
+                return new UnsafeSizeOf(filter);
+            } catch (UnsupportedOperationException f) {
+                try {
+                    return new ReflectionSizeOf(filter);
+                } catch (UnsupportedOperationException g) {
+                    throw new UnsupportedOperationException("A suitable SizeOf engine could not be loaded: " + e + ", " + f + ", " + g);
+                }
+            }
+        }
     }
 
     /**
