@@ -55,15 +55,16 @@
                         </goals>
                         <configuration>
                             <source>
-                                def jarFile = new File(project.build.directory, "classes/org/ehcache/sizeof/impl/sizeof-agent.jar");
+                                def jarFile = new File(project.build.directory, "/classes/org/ehcache/sizeof/impl/sizeof-agent.jar");
                                 def agentClass = "/org/ehcache/sizeof/impl/SizeOfAgent.class"
-                                def rootDir = project.basedir.getAbsolutePath() + "/src/hidden/resources";
+                                def agentDir = project.build.directory + "/agent-jar"
+                                def manifestDir = project.basedir.getAbsolutePath() + "/src/hidden/resources";
                                 ant.move(file: new File(project.build.outputDirectory, agentClass),
-                                        tofile: new File(rootDir, agentClass))
+                                        tofile: new File(agentDir, agentClass))
 
-                                ant.jar(destfile: jarFile, basedir: new File(rootDir).getAbsolutePath(), manifest: new File(rootDir, "META-INF/MANIFEST.MF"))
+                                ant.jar(destfile: jarFile, basedir: new File(agentDir).getAbsolutePath(), manifest: new File(manifestDir, "/META-INF/MANIFEST.MF"))
 
-                                ant.delete(dir: new File(rootDir, "/org"))
+                                ant.delete(dir: new File(agentDir))
                             </source>
                         </configuration>
                     </execution>
