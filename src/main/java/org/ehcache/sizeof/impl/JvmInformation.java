@@ -91,7 +91,7 @@ public enum JvmInformation {
     /**
      * Represents 64-Bit Generic JVM
      */
-    UNKNOWN_64_BIT(null) {
+    UNKNOWN_64_BIT(UNKNOWN_32_BIT) {
 
         @Override
         public int getPointerSize() {
@@ -106,36 +106,6 @@ public enum JvmInformation {
         @Override
         public String getJvmDescription() {
             return "Unrecognized 64-Bit JVM";
-        }
-
-        @Override
-        public int getObjectAlignment() {
-            return 8;
-        }
-
-        @Override
-        public int getFieldOffsetAdjustment() {
-            return 0;
-        }
-
-        @Override
-        public int getAgentSizeOfAdjustment() {
-            return 0;
-        }
-
-        @Override
-        public boolean supportsAgentSizeOf() {
-            return true;
-        }
-
-        @Override
-        public boolean supportsUnsafeSizeOf() {
-            return true;
-        }
-
-        @Override
-        public boolean supportsReflectionSizeOf() {
-            return true;
         }
     },
 
