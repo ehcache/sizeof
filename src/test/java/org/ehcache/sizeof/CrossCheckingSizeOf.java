@@ -10,7 +10,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.sf.ehcache.pool.sizeof.JvmInformation.CURRENT_JVM_INFORMATION;
+import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 
 /**
  * @author Alex Snaps

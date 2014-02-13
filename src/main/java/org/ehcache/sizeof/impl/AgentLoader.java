@@ -143,7 +143,7 @@ final class AgentLoader {
     }
 
     private static void warnIfOSX() {
-        if (net.sf.ehcache.pool.sizeof.JvmInformation.isOSX() && System.getProperty("java.io.tmpdir") != null) {
+        if (JvmInformation.isOSX() && System.getProperty("java.io.tmpdir") != null) {
             LOGGER.warn("Loading the SizeOfAgent will probably fail, as you are running on Apple OS X and have a value set for java.io.tmpdir\n" +
                         "They both result in a bug, not yet fixed by Apple, that won't let us attach to the VM and load the agent.\n" +
                         "Most probably, you'll also get a full thread-dump after this because of the failure... Nothing to worry about!\n" +

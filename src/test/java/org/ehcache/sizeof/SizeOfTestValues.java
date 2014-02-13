@@ -1,6 +1,6 @@
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.sizeof.JvmInformation;
+import org.ehcache.sizeof.impl.JvmInformation;
 import org.hamcrest.collection.IsMapContainingKey;
 import org.junit.Assert;
 
@@ -190,27 +190,6 @@ public class SizeOfTestValues {
 
         CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT, Collections.<String, Long>emptyMap());
 
-        Map<String, Long> jrockit64BitWithCompressedRefs = new HashMap<String, Long>();
-        jrockit64BitWithCompressedRefs.put("sizeOf(new Object())", 16L);
-        jrockit64BitWithCompressedRefs.put("sizeOf(new Integer(1))", 24L);
-        jrockit64BitWithCompressedRefs.put("sizeOf(1000)", 24L);
-        jrockit64BitWithCompressedRefs.put("deepSizeOf(new SomeClass(false))", 24L);
-        jrockit64BitWithCompressedRefs.put("deepSizeOf(new SomeClass(true))", 40L);
-        jrockit64BitWithCompressedRefs.put("sizeOf(new Object[] { })", 24L);
-        jrockit64BitWithCompressedRefs.put("sizeOf(new Object[] { new Object(), new Object(), new Object(), new Object() })", 40L);
-        jrockit64BitWithCompressedRefs.put("sizeOf(new int[] { })", 24L);
-        jrockit64BitWithCompressedRefs.put("sizeOf(new int[] { 987654, 876543, 765432, 654321 })", 40L);
-        jrockit64BitWithCompressedRefs.put("deepSizeOf(new Pair(null, null))", 24L);
-        jrockit64BitWithCompressedRefs.put("deepSizeOf(new Pair(new Object(), null))", 40L);
-        jrockit64BitWithCompressedRefs.put("deepSizeOf(new Pair(new Object(), new Object()))", 56L);
-        switch (jvmVersion) {
-            case 6:
-                jrockit64BitWithCompressedRefs.put("deepSizeOf(new ReentrantReadWriteLock())", 144L);
-                break;
-        }
-        CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT_WITH_4GB_COMPRESSED_REFS, jrockit64BitWithCompressedRefs);
-
-        CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT_WITH_32GB_COMPRESSED_REFS, Collections.<String, Long>emptyMap());
         CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT_WITH_64GB_COMPRESSED_REFS, Collections.<String, Long>emptyMap());
 
         Map<String, Long> ibm32Bit = new HashMap<String, Long>();
