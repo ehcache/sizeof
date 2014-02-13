@@ -25,6 +25,20 @@ public class JvmInformationTest {
     }
 
     @Test
+    public void openJdk32Bits() {
+        verifyJvmInfo(JvmInformation.OPENJDK_32_BIT, 0, 0, 4, 8, 8, 8, 4, true, true, true);
+        verifyJvmInfo(JvmInformation.OPENJDK_32_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, 0, 0, 4, 16, 8, 8, 4, true, true, true);
+    }
+
+    @Test
+    public void openJdk64Bits() {
+        verifyJvmInfo(JvmInformation.OPENJDK_64_BIT, 0, 0, 8, 8, 8, 16, 8, true, true, true);
+        verifyJvmInfo(JvmInformation.OPENJDK_64_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, 0, 0, 8, 24, 8, 16, 8, true, true, true);
+        verifyJvmInfo(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS, 0, 0, 4, 8, 8, 12, 8, true, true, true);
+        verifyJvmInfo(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_AND_CONCURRENT_MARK_AND_SWEEP, 0, 0, 4, 24, 8, 12, 8, true, true, true);
+    }
+
+    @Test
     public void jrockit32Bits() {
         verifyJvmInfo(JvmInformation.JROCKIT_32_BIT, 8, 8, 4, 8, 8, 16, 4, true, false, true);
     }
