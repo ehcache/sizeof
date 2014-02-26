@@ -4,12 +4,38 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>org.ehcache</groupId>
     <artifactId>sizeof</artifactId>
     <version>0.2.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Ehcache SizeOf Engine</name>
+    <description><![CDATA[SizeOf engine, extracted from Ehcache]]></description>
+
+    <url>https://github.com/Terracotta-OSS/ehcache-sizeofengine</url>
+
+    <organization>
+        <name>Terracotta</name>
+        <url>http://terracotta.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
@@ -84,4 +110,11 @@
             </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <url>https://github.com/Terracotta-OSS/ehcache-sizeofengine</url>
+        <connection>scm:git:git@github.com:Terracotta-OSS/ehcache-sizeofengine.git</connection>
+        <developerConnection>scm:git:git@github.com:Terracotta-OSS/ehcache-sizeofengine.git</developerConnection>
+    </scm>
+
 </project>
