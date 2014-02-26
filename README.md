@@ -43,3 +43,27 @@ Example
 
 There can be as many FilterConfigurator on the classpath as required, they'll have configure the filter once.
 The Filter is shared across all SizeOfEngine instances created.
+
+Using it
+========
+
+Maven
+-----
+
+Releases are available from Maven Central.
+
+Snapshots are available from the Sonatype OSS snapshot repository.
+In order to access the snapshots, you need to add the following repository to your pom.xml:
+```
+<repository>
+    <id>sonatype-nexus-snapshots</id>
+    <name>Sonatype Nexus Snapshots</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    <releases>
+        <enabled>false</enabled>
+    </releases>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>
+```
