@@ -105,6 +105,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.16</version>
                 <configuration>
+                    <argLine>-Xms64m -Xmx64m</argLine>
                     <forkMode>always</forkMode>
                 </configuration>
             </plugin>
