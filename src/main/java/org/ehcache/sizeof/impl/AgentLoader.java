@@ -148,7 +148,7 @@ final class AgentLoader {
                         "They both result in a bug, not yet fixed by Apple, that won't let us attach to the VM and load the agent.\n" +
                         "Most probably, you'll also get a full thread-dump after this because of the failure... Nothing to worry about!\n" +
                         "You can bypass trying to load the Agent entirely by setting the System property '"
-                        + net.sf.ehcache.pool.sizeof.AgentSizeOf.BYPASS_LOADING + "'  to true");
+                        + AgentSizeOf.BYPASS_LOADING + "'  to true");
         }
     }
 
