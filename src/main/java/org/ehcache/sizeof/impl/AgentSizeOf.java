@@ -34,7 +34,7 @@ public class AgentSizeOf extends SizeOf {
     /**
      * System property name to bypass attaching to the VM and loading of Java agent to measure Object sizes.
      */
-    public static final String BYPASS_LOADING = "net.sf.ehcache.pool.sizeof.AgentSizeOf.bypass";
+    public static final String BYPASS_LOADING = "org.ehcache.sizeof.AgentSizeOf.bypass";
 
     private static final boolean AGENT_LOADED = !Boolean.getBoolean(BYPASS_LOADING) && AgentLoader.loadAgent();
 
