@@ -43,6 +43,7 @@ public class SizeOfTestValues {
                 break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_32_BIT, hotspot32Bit);
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_32_BIT, hotspot32Bit);
 
         Map<String, Long> hotspot32BitWithConcurrentMarkAndSweep = new HashMap<String, Long>();
         hotspot32BitWithConcurrentMarkAndSweep.put("sizeOf(new Object())", 16L);
@@ -69,6 +70,7 @@ public class SizeOfTestValues {
                 break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_32_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, hotspot32BitWithConcurrentMarkAndSweep);
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_32_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, hotspot32BitWithConcurrentMarkAndSweep);
 
         Map<String, Long> hotspot64Bit = new HashMap<String, Long>();
         hotspot64Bit.put("sizeOf(new Object())", 16L);
@@ -95,6 +97,7 @@ public class SizeOfTestValues {
                 break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT, hotspot64Bit);
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT, hotspot64Bit);
 
         Map<String, Long> hotspot64BitWithCMS = new HashMap<String, Long>();
         hotspot64BitWithCMS.put("sizeOf(new Object())", 24L);
@@ -121,6 +124,7 @@ public class SizeOfTestValues {
                 break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCMS);
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCMS);
 
         Map<String, Long> hotspot64BitWithCompressedOops = new HashMap<String, Long>();
         hotspot64BitWithCompressedOops.put("sizeOf(new Object())", 16L);
@@ -144,6 +148,7 @@ public class SizeOfTestValues {
                 break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT_WITH_COMPRESSED_OOPS, hotspot64BitWithCompressedOops);
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS, hotspot64BitWithCompressedOops);
 
         Map<String, Long> hotspot64BitWithCompressedOopsAndCMS = new HashMap<String, Long>();
         hotspot64BitWithCompressedOopsAndCMS.put("sizeOf(new Object())", 24L);
@@ -167,6 +172,7 @@ public class SizeOfTestValues {
                 break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT_WITH_COMPRESSED_OOPS_AND_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCompressedOopsAndCMS);
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_AND_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCompressedOopsAndCMS);
 
         Map<String, Long> jrockit32Bit = new HashMap<String, Long>();
         jrockit32Bit.put("sizeOf(new Object())", 16L);
