@@ -165,8 +165,8 @@ public class ReflectionSizeOf extends SizeOf {
                     size += oops * PrimitiveType.getReferenceSize();
                 }
 
-                if ((doubles + words + shorts + bytes + oops) > 0 && (size % CURRENT_JVM_INFORMATION.getPointerSize()) != 0) {
-                    size += CURRENT_JVM_INFORMATION.getPointerSize() - (size % CURRENT_JVM_INFORMATION.getPointerSize());
+                if ((doubles + words + shorts + bytes + oops) > 0 && (size % PrimitiveType.getReferenceSize()) != 0) {
+                    size += PrimitiveType.getReferenceSize() - (size % PrimitiveType.getReferenceSize());
                 }
             }
             if ((size % CURRENT_JVM_INFORMATION.getObjectAlignment()) != 0) {
