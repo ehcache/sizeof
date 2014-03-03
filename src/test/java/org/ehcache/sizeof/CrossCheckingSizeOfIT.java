@@ -36,7 +36,7 @@ import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V1_7;
+import static org.objectweb.asm.Opcodes.V1_6;
 
 /**
  *
@@ -108,7 +108,7 @@ public class CrossCheckingSizeOfIT {
     for (List<Class<?>> fields : classes) {
       String classDesc = "A" + classIndex++;
       ClassWriter cw = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
-      cw.visit(V1_7, ACC_PUBLIC, classDesc, null, superClassDesc, null);
+      cw.visit(V1_6, ACC_PUBLIC, classDesc, null, superClassDesc, null);
       MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
       mv.visitCode();
       mv.visitVarInsn(ALOAD, 0);
