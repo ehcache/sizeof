@@ -49,7 +49,16 @@ The +Filter+ is shared across all +SizeOfEngine+ instances created.
 
 Releases are available from Maven Central.
 
-Snapshots are available from the Sonatype OSS snapshot repository.
+[source,xml]
+----
+<dependency>
+    <groupId>org.ehcache</groupId>
+    <artifactId>sizeof</artifactId>
+    <version>${sizeof.version}</version>
+</dependency>
+----
+
+Snapshots are available from the https://oss.sonatype.org/content/repositories/snapshots[Sonatype OSS snapshots] repository.
 In order to access the snapshots, you need to add the following repository to your +pom.xml+:
 
 [source,xml]
