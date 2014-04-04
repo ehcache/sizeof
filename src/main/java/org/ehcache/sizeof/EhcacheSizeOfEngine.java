@@ -60,12 +60,7 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
             org.ehcache.sizeof.Size ourSize = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), key, value, container);
             size = new Size(ourSize.getCalculated(), ourSize.isExact());
         } catch (MaxDepthExceededException e) {
-            LOG.warn(e.getMessage());
-            LOG.warn("key type: " + key.getClass().getName());
-            LOG.warn("key: " + key);
-            LOG.warn("value type: " + value.getClass().getName());
-            LOG.warn("value: " + value);
-            LOG.warn("container: " + container);
+            logMaxDepthExceededException(key, value, container, e);
             size = new Size(e.getMeasuredSize(), false);
         }
 
@@ -73,5 +68,15 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
             LOG.debug("size of {}/{}/{} -> {}", new Object[] { key, value, container, size.getCalculated() });
         }
         return size;
+    }
+
+    protected void logMaxDepthExceededException(Object key, Object value, Object container, MaxDepthExceededException e)
+    {
+        LOG.warn(e.getMessage());
+        LOG.debug("key type: " + key.getClass().getName());
+        LOG.debug("key: " + key);
+        LOG.debug("value type: " + value.getClass().getName());
+        LOG.debug("value: " + value);
+        LOG.debug("container: " + container);
     }
 }
