@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Stack;
 
+import net.sf.ehcache.pool.sizeof.MaxDepthExceededException;
+
 /**
  * This will walk an object graph and let you execute some "function" along the way
  *
@@ -201,7 +203,7 @@ final class ObjectGraphWalker {
                                   final IdentityHashMap<Object, Object> visited) {
         if (visited.size() >= maxDepth) {
             if (abortWhenMaxDepthExceeded) {
-                throw new IllegalArgumentException(MessageFormat.format(ABORT_MESSAGE, maxDepth));
+                throw new MaxDepthExceededException(MessageFormat.format(ABORT_MESSAGE, maxDepth));
             } else if (!warned) {
                 LOG.warn(MessageFormat.format(CONTINUE_MESSAGE, maxDepth));
                 warned = true;
