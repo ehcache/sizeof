@@ -16,9 +16,6 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.Size;
-import net.sf.ehcache.pool.SizeOfEngine;
-import net.sf.ehcache.pool.sizeof.MaxDepthExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

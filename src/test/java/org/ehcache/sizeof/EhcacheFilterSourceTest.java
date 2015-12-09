@@ -16,7 +16,7 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.SizeOfEngineLoader;
+import org.ehcache.sizeof.SizeOfEngineLoader;
 import org.ehcache.sizeof.filters.AnnotationSizeOfFilter;
 import org.junit.Test;
 
