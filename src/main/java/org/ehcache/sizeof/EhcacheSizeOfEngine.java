@@ -44,28 +44,17 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
     /**
      * {@inheritDoc}
      */
-
-    public SizeOfEngine copyWith(int maxDepth, boolean abortWhenMaxDepthExceeded) {
-        return new EhcacheSizeOfEngine(this.cfg);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public Size sizeOf(final Object... objects) {
         Size size;
         try {
-            org.ehcache.sizeof.Size ourSize = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), objects);
-            size = new Size(ourSize.getCalculated(), ourSize.isExact());
+            size = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), objects);
         } catch (MaxDepthExceededException e) {
             logMaxDepthExceededException(e);
             size = new Size(e.getMeasuredSize(), false);
         }
 
         if (USE_VERBOSE_DEBUG_LOGGING && LOG.isDebugEnabled()) {
-            for (int i = 0; i < objects.length; i++) {
-              LOG.debug("size of {} -> {}", new Object[] { objects[i], size.getCalculated() });
-            }
+              LOG.debug("size of {} -> {}", new Object[] { objects, size.getCalculated() });
         }
         return size;
     }

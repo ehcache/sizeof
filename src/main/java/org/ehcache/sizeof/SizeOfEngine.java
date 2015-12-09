@@ -26,18 +26,9 @@ public interface SizeOfEngine {
     /**
      * Size an element
      *
-     * @param objects array of objects for which is to be calculated
+     * @param objects array of objects for which size is to be calculated
      * @return the size of the element in bytes
      */
     Size sizeOf(Object... objects);
-
-    /**
-     * Make a copy of the SizeOf engine, preserving all of its internal state but overriding the specified parameters
-     *
-     * @param maxDepth maximum depth of the object graph to traverse
-     * @param abortWhenMaxDepthExceeded true if the object traversal should be aborted when the max depth is exceeded
-     * @return a copy of the SizeOf engine using the specified parameters
-     */
-    SizeOfEngine copyWith(int maxDepth, boolean abortWhenMaxDepthExceeded);
 
 }
