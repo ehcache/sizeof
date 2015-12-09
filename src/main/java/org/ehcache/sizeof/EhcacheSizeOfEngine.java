@@ -44,6 +44,7 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
     /**
      * {@inheritDoc}
      */
+
     public SizeOfEngine copyWith(int maxDepth, boolean abortWhenMaxDepthExceeded) {
         return new EhcacheSizeOfEngine(this.cfg);
     }
@@ -51,29 +52,26 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
     /**
      * {@inheritDoc}
      */
-    public Size sizeOf(final Object key, final Object value, final Object container) {
+    public Size sizeOf(final Object... objects) {
         Size size;
         try {
-            org.ehcache.sizeof.Size ourSize = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), key, value, container);
+            org.ehcache.sizeof.Size ourSize = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), objects);
             size = new Size(ourSize.getCalculated(), ourSize.isExact());
         } catch (MaxDepthExceededException e) {
-            logMaxDepthExceededException(key, value, container, e);
+            logMaxDepthExceededException(e);
             size = new Size(e.getMeasuredSize(), false);
         }
 
         if (USE_VERBOSE_DEBUG_LOGGING && LOG.isDebugEnabled()) {
-            LOG.debug("size of {}/{}/{} -> {}", new Object[] { key, value, container, size.getCalculated() });
+            for (int i = 0; i < objects.length; i++) {
+              LOG.debug("size of {} -> {}", new Object[] { objects[i], size.getCalculated() });
+            }
         }
         return size;
     }
 
-    protected void logMaxDepthExceededException(Object key, Object value, Object container, MaxDepthExceededException e)
+    protected void logMaxDepthExceededException(MaxDepthExceededException e)
     {
         LOG.warn(e.getMessage());
-        LOG.debug("key type: " + key.getClass().getName());
-        LOG.debug("key: " + key);
-        LOG.debug("value type: " + value.getClass().getName());
-        LOG.debug("value: " + value);
-        LOG.debug("container: " + container);
     }
 }

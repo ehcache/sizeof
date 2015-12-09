@@ -26,12 +26,10 @@ public interface SizeOfEngine {
     /**
      * Size an element
      *
-     * @param key the key of the element
-     * @param value the value of the element
-     * @param container the container of the element, ie: element object + eventual overhead
+     * @param objects array of objects for which is to be calculated
      * @return the size of the element in bytes
      */
-    Size sizeOf(Object key, Object value, Object container);
+    Size sizeOf(Object... objects);
 
     /**
      * Make a copy of the SizeOf engine, preserving all of its internal state but overriding the specified parameters
