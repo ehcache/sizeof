@@ -1,3 +1,3 @@
 @IgnoreSizeOf package org.ehcache.sizeof.filteredtest;
 
-import net.sf.ehcache.pool.sizeof.annotations.IgnoreSizeOf;
+import org.ehcache.sizeof.annotations.IgnoreSizeOf;

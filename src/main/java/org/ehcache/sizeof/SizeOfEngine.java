@@ -16,21 +16,19 @@
 
 package org.ehcache.sizeof;
 
-import org.ehcache.sizeof.SizeOfEngine;
-import org.ehcache.sizeof.SizeOfEngineLoader;
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
 /**
- * @author Alex Snaps
+ * SizeOf engines are used to calculate the size of elements stored in poolable stores.
+ *
+ * @author Ludovic Orban
  */
-public class EhcacheIntegrationTest {
+public interface SizeOfEngine {
 
-  @Test
-  public void testEhcacheUsesOurImplementation() {
-    final SizeOfEngine sizeOfEngine = SizeOfEngineLoader.newSizeOfEngine(10, false, false);
-    assertThat(sizeOfEngine, instanceOf(EhcacheSizeOfEngine.class));
-  }
+    /**
+     * Size an element
+     *
+     * @param objects array of objects for which size is to be calculated
+     * @return the size of the element in bytes
+     */
+    Size sizeOf(Object... objects);
+
 }

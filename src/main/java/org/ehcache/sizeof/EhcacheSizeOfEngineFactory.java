@@ -16,7 +16,6 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.SizeOfEngineFactory;
 
 /**
  * @author Alex Snaps

@@ -16,21 +16,18 @@
 
 package org.ehcache.sizeof;
 
-import org.ehcache.sizeof.SizeOfEngine;
-import org.ehcache.sizeof.SizeOfEngineLoader;
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
 /**
  * @author Alex Snaps
  */
-public class EhcacheIntegrationTest {
+public interface SizeOfEngineFactory {
 
-  @Test
-  public void testEhcacheUsesOurImplementation() {
-    final SizeOfEngine sizeOfEngine = SizeOfEngineLoader.newSizeOfEngine(10, false, false);
-    assertThat(sizeOfEngine, instanceOf(EhcacheSizeOfEngine.class));
-  }
+    /**
+     * Creates a new instance of a SizeOfEngine
+     *
+     * @param maxObjectCount the max object graph that will be traversed.
+     * @param abort          true if the object traversal should be aborted when the max depth is exceeded
+     * @param silent         true if no info log explaining which agent was chosen should be printed
+     * @return the new instance
+     */
+    SizeOfEngine createSizeOfEngine(int maxObjectCount, boolean abort, boolean silent);
 }

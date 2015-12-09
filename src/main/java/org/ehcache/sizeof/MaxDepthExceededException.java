@@ -16,21 +16,35 @@
 
 package org.ehcache.sizeof;
 
-import org.ehcache.sizeof.SizeOfEngine;
-import org.ehcache.sizeof.SizeOfEngineLoader;
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
 /**
- * @author Alex Snaps
+ * @author Ludovic Orban
  */
-public class EhcacheIntegrationTest {
+public class MaxDepthExceededException extends RuntimeException {
 
-  @Test
-  public void testEhcacheUsesOurImplementation() {
-    final SizeOfEngine sizeOfEngine = SizeOfEngineLoader.newSizeOfEngine(10, false, false);
-    assertThat(sizeOfEngine, instanceOf(EhcacheSizeOfEngine.class));
-  }
+    private long measuredSize;
+
+    /**
+     * Constructor
+     */
+    public MaxDepthExceededException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Add to the partially measured size
+     *
+     * @param toAdd
+     */
+    public void addToMeasuredSize(long toAdd) {
+        measuredSize += toAdd;
+    }
+
+    /**
+     * Get the partially measured size
+     *
+     * @return
+     */
+    public long getMeasuredSize() {
+        return measuredSize;
+    }
 }

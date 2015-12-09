@@ -16,9 +16,6 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.Size;
-import net.sf.ehcache.pool.SizeOfEngine;
-import net.sf.ehcache.pool.sizeof.MaxDepthExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,36 +44,23 @@ public class EhcacheSizeOfEngine implements SizeOfEngine {
     /**
      * {@inheritDoc}
      */
-    public SizeOfEngine copyWith(int maxDepth, boolean abortWhenMaxDepthExceeded) {
-        return new EhcacheSizeOfEngine(this.cfg);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Size sizeOf(final Object key, final Object value, final Object container) {
+    public Size sizeOf(final Object... objects) {
         Size size;
         try {
-            org.ehcache.sizeof.Size ourSize = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), key, value, container);
-            size = new Size(ourSize.getCalculated(), ourSize.isExact());
+            size = sizeOf.deepSizeOf(cfg.getMaxDepth(), cfg.isAbort(), objects);
         } catch (MaxDepthExceededException e) {
-            logMaxDepthExceededException(key, value, container, e);
+            logMaxDepthExceededException(e);
             size = new Size(e.getMeasuredSize(), false);
         }
 
         if (USE_VERBOSE_DEBUG_LOGGING && LOG.isDebugEnabled()) {
-            LOG.debug("size of {}/{}/{} -> {}", new Object[] { key, value, container, size.getCalculated() });
+              LOG.debug("size of {} -> {}", new Object[] { objects, size.getCalculated() });
         }
         return size;
     }
 
-    protected void logMaxDepthExceededException(Object key, Object value, Object container, MaxDepthExceededException e)
+    protected void logMaxDepthExceededException(MaxDepthExceededException e)
     {
         LOG.warn(e.getMessage());
-        LOG.debug("key type: " + key.getClass().getName());
-        LOG.debug("key: " + key);
-        LOG.debug("value type: " + value.getClass().getName());
-        LOG.debug("value: " + value);
-        LOG.debug("container: " + container);
     }
 }
