@@ -16,7 +16,6 @@
 
 package org.ehcache.sizeof;
 
-import net.sf.ehcache.pool.SizeOfEngineLoader;
 import org.ehcache.sizeof.filters.AnnotationSizeOfFilter;
 import org.junit.Test;
 
@@ -60,7 +59,7 @@ public class EhcacheFilterSourceTest {
   private static class CheatingClassLoader extends SecureClassLoader {
 
     public CheatingClassLoader() {
-      super(SizeOfEngineLoader.class.getClassLoader());
+      super(EhcacheFilterSourceTest.class.getClassLoader());
     }
 
     @Override
