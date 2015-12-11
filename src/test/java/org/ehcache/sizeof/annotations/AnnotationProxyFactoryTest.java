@@ -61,11 +61,10 @@ public class AnnotationProxyFactoryTest {
     @Test
     public void DifferentReturnTypesFromDifferentMethods_Test() {
         CustomAnnotation customAnnotation = UsingCustomAnnotation.class.getAnnotation(CustomAnnotation.class);
-        ReferenceAnnotation annotationProxy = net.sf
+        ReferenceAnnotation annotationProxy = org
             .ehcache
-            .pool
             .sizeof
-            .filter
+            .annotations
             .AnnotationProxyFactory
             .getAnnotationProxy(customAnnotation, ReferenceAnnotation.class);
         assertEquals(Integer.class, annotationProxy.aClass());
