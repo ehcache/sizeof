@@ -67,8 +67,8 @@ public abstract class SizeOf {
      * @return the total size in bytes for these objects
      * @see #sizeOf(Object)
      */
-    public Size deepSizeOf(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... obj) {
-        return new Size(walker.walk(maxDepth, abortWhenMaxDepthExceeded, obj), true);
+    public long deepSizeOf(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... obj) {
+        return walker.walk(maxDepth, abortWhenMaxDepthExceeded, obj);
     }
 
     public static SizeOf newInstance(final SizeOfFilter... filters) {
