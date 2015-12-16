@@ -61,14 +61,17 @@ public abstract class SizeOf {
      * Measures the size in memory (heap) of the objects passed in, walking their graph down
      * Any overlap of the graphs being passed in will be recognized and only measured once
      *
-     * @param maxDepth                  maximum depth of the object graph to traverse
-     * @param abortWhenMaxDepthExceeded true if the object traversal should be aborted when the max depth is exceeded
+     * @param listener                  A listener to visited objects
      * @param obj                       the root objects of the graphs to measure
      * @return the total size in bytes for these objects
      * @see #sizeOf(Object)
      */
-    public long deepSizeOf(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... obj) {
-        return walker.walk(maxDepth, abortWhenMaxDepthExceeded, obj);
+    public long deepSizeOf(VisitorListener listener, Object... obj) {
+        return walker.walk(listener, obj);
+    }
+
+    public long deepSizeOf(Object... obj) {
+        return walker.walk(null, obj);
     }
 
     public static SizeOf newInstance(final SizeOfFilter... filters) {

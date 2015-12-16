@@ -95,25 +95,34 @@ final class ObjectGraphWalker {
      * The visitor to execute the function on each node of the graph
      * This is only to be used for the sizing of an object graph in memory!
      */
-    static interface Visitor {
+    interface Visitor {
         /**
          * The visit method executed on each node
          *
          * @param object the reference at that node
          * @return a long for you to do things with...
          */
-        public long visit(Object object);
+        long visit(Object object);
     }
 
     /**
      * Walk the graph and call into the "visitor"
      *
-     * @param maxDepth                  maximum depth to traverse the object graph
-     * @param abortWhenMaxDepthExceeded true if the object traversal should be aborted when the max depth is exceeded
      * @param root                      the roots of the objects (a shared graph will only be visited once)
      * @return the sum of all Visitor#visit returned values
      */
-    long walk(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... root) {
+    long walk(Object... root) {
+        return walk(null, root);
+    }
+
+    /**
+     * Walk the graph and call into the "visitor"
+     *
+     * @param visitorListener          A decorator for the Visitor
+     * @param root                      the roots of the objects (a shared graph will only be visited once)
+     * @return the sum of all Visitor#visit returned values
+     */
+    long walk(VisitorListener visitorListener, Object... root) {
         final StringBuilder traversalDebugMessage;
         if (USE_VERBOSE_DEBUG_LOGGING && LOG.isDebugEnabled()) {
             traversalDebugMessage = new StringBuilder();
@@ -121,7 +130,6 @@ final class ObjectGraphWalker {
             traversalDebugMessage = null;
         }
         long result = 0;
-        boolean warned = false;
         Stack<Object> toVisit = new Stack<Object>();
         IdentityHashMap<Object, Object> visited = new IdentityHashMap<Object, Object>();
 
@@ -142,7 +150,6 @@ final class ObjectGraphWalker {
         }
 
         while (!toVisit.isEmpty()) {
-            warned = checkMaxDepth(maxDepth, abortWhenMaxDepthExceeded, warned, visited);
 
             Object ref = toVisit.pop();
 
@@ -166,7 +173,10 @@ final class ObjectGraphWalker {
                     }
                 }
 
-                long visitSize = calculateSize(ref);
+                final long visitSize = visitor.visit(ref);
+                if (visitorListener != null) {
+                    visitorListener.visited(ref, visitSize);
+                }
                 if (traversalDebugMessage != null) {
                     traversalDebugMessage.append("  ").append(visitSize).append("b\t\t")
                         .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
@@ -184,16 +194,6 @@ final class ObjectGraphWalker {
             LOG.debug(traversalDebugMessage.toString());
         }
         return result;
-    }
-
-    private long calculateSize(Object ref) {
-        long visitSize;
-        if (ref == null) {
-            return 0;
-        } else {
-            visitSize = visitor.visit(ref);
-        }
-        return visitSize;
     }
 
     private boolean checkMaxDepth(final int maxDepth, final boolean abortWhenMaxDepthExceeded, boolean warned,

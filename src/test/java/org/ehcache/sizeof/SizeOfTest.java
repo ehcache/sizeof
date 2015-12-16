@@ -40,7 +40,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
     public Object[] container;
 
     private static long deepSizeOf(SizeOf sizeOf, Object... obj) {
-        return sizeOf.deepSizeOf(1000, true, obj);
+        return sizeOf.deepSizeOf(obj);
     }
 
     @BeforeClass
