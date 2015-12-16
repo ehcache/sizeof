@@ -23,7 +23,7 @@ import java.util.Collection;
  * Filter to filter types or fields of object graphs passed to a SizeOf engine
  *
  * @author Chris Dennis
- * @see net.sf.ehcache.pool.sizeof.SizeOf
+ * @see org.ehcache.sizeof.SizeOf
  */
 public interface SizeOfFilter {
 

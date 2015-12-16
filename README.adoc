@@ -20,7 +20,7 @@ You simply need to add the jars of the modules that you want along side this pro
 In order to ignore fields or instances of certain classes when sizing object graphs, you'll have to
 
  . Create a http://docs.oracle.com/javase/6/docs/api/java/util/ServiceLoader.html[ServiceLoader] project, for http://terracotta-oss.github.io/ehcache-sizeofengine/apidocs/net/sf/ehcache/sizeofengine/FilterConfigurator.html[net.sf.ehcache.sizeofengine.FilterConfigurator]
-   * Have your jar contain a text file named +META-INF/services/net.sf.ehcache.sizeofengine.FilterConfigurator+
+   * Have your jar contain a text file named +META-INF/services/org.ehcache.sizeof.FilterConfigurator+
    * The file should contain the fully qualified class name of your implementation
  . Implement http://terracotta-oss.github.io/ehcache-sizeofengine/apidocs/net/sf/ehcache/sizeofengine/FilterConfigurator.html[FilterConfigurator]'s configure method to configure the http://terracotta-oss.github.io/ehcache-sizeofengine/apidocs/net/sf/ehcache/sizeofengine/Filter.html[Filter] of classes and fields
  . put your jar on your application's classpath, along side of the ehcache jar and this ehcache-sizeofengine jar

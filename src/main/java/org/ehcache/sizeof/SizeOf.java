@@ -37,7 +37,7 @@ public abstract class SizeOf {
      *
      * @param fieldFilter The filter to apply
      * @param caching     whether to cache reflected fields
-     * @see net.sf.ehcache.pool.sizeof.filter.SizeOfFilter
+     * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
     public SizeOf(SizeOfFilter fieldFilter, boolean caching) {
         ObjectGraphWalker.Visitor visitor;

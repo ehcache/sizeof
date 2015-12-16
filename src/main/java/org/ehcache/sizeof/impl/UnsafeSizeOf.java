@@ -70,7 +70,7 @@ public class UnsafeSizeOf extends SizeOf {
      * @param filter The filter to apply
      * @throws UnsupportedOperationException If Unsafe isn't accessible
      * @see #UnsafeSizeOf(org.ehcache.sizeof.filters.SizeOfFilter, boolean)
-     * @see net.sf.ehcache.pool.sizeof.filter.SizeOfFilter
+     * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
     public UnsafeSizeOf(SizeOfFilter filter) throws UnsupportedOperationException {
         this(filter, true);
