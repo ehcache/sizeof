@@ -39,7 +39,6 @@ import java.util.Stack;
 final class ObjectGraphWalker {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectGraphWalker.class);
-    private static final String TC_INTERNAL_FIELD_PREFIX = "$__tc_";
     private static final String VERBOSE_DEBUG_LOGGING = "net.sf.ehcache.sizeof.verboseDebugLogging";
 
     private static final String CONTINUE_MESSAGE =
@@ -262,8 +261,7 @@ final class ObjectGraphWalker {
         for (Class<?> klazz = refClass; klazz != null; klazz = klazz.getSuperclass()) {
             for (Field field : klazz.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers()) &&
-                    !field.getType().isPrimitive() &&
-                    !field.getName().startsWith(TC_INTERNAL_FIELD_PREFIX)) {
+                    !field.getType().isPrimitive()) {
                     try {
                         field.setAccessible(true);
                     } catch (SecurityException e) {
