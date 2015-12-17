@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Annotation to ignore a field, type or entire package while doing a SizeOf measurement
  *
  * @author Chris Dennis
- * @see net.sf.ehcache.pool.sizeof.SizeOf
+ * @see org.ehcache.sizeof.SizeOf
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.TYPE, ElementType.PACKAGE })

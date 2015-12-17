@@ -39,7 +39,7 @@ import java.util.Stack;
 final class ObjectGraphWalker {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectGraphWalker.class);
-    private static final String VERBOSE_DEBUG_LOGGING = "net.sf.ehcache.sizeof.verboseDebugLogging";
+    private static final String VERBOSE_DEBUG_LOGGING = "org.ehcache.sizeof.verboseDebugLogging";
 
     private static final String CONTINUE_MESSAGE =
         "The configured limit of {0} object references was reached while attempting to calculate the size of the object graph." +

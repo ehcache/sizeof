@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
  */
 public class FilteredSizeOfTest extends AbstractSizeOfTest {
     private static long deepSizeOf(SizeOf sizeOf, Object... obj) {
-        return sizeOf.deepSizeOf(1000, true, obj).getCalculated();
+        return sizeOf.deepSizeOf(1000, true, obj);
     }
 
     @BeforeClass

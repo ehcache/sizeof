@@ -12,10 +12,10 @@ import static org.junit.Assert.assertThat;
 public class AgentLoaderTest {
     @Test
     public void testLoadsAgentProperly() {
-        assertThat(Boolean.getBoolean("net.sf.ehcache.sizeof.agent.instrumentationSystemProperty"), is(false));
+        assertThat(Boolean.getBoolean("org.ehcache.sizeof.agent.instrumentationSystemProperty"), is(false));
         AgentLoader.loadAgent();
         if (AgentLoader.agentIsAvailable()) {
-            assertThat(System.getProperties().get("net.sf.ehcache.sizeof.agent.instrumentation"), nullValue());
+            assertThat(System.getProperties().get(AgentLoader.INSTRUMENTATION_INSTANCE_SYSTEM_PROPERTY_NAME), nullValue());
         }
     }
 }

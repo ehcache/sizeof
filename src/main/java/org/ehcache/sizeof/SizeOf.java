@@ -37,7 +37,7 @@ public abstract class SizeOf {
      *
      * @param fieldFilter The filter to apply
      * @param caching     whether to cache reflected fields
-     * @see net.sf.ehcache.pool.sizeof.filter.SizeOfFilter
+     * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
     public SizeOf(SizeOfFilter fieldFilter, boolean caching) {
         ObjectGraphWalker.Visitor visitor;
@@ -67,8 +67,8 @@ public abstract class SizeOf {
      * @return the total size in bytes for these objects
      * @see #sizeOf(Object)
      */
-    public Size deepSizeOf(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... obj) {
-        return new Size(walker.walk(maxDepth, abortWhenMaxDepthExceeded, obj), true);
+    public long deepSizeOf(int maxDepth, boolean abortWhenMaxDepthExceeded, Object... obj) {
+        return walker.walk(maxDepth, abortWhenMaxDepthExceeded, obj);
     }
 
     public static SizeOf newInstance(final SizeOfFilter... filters) {

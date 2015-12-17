@@ -54,7 +54,7 @@ public class AgentSizeOf extends SizeOf {
      * @param filter The filter to apply
      * @throws UnsupportedOperationException If agent couldn't be loaded or isn't present
      * @see #AgentSizeOf(SizeOfFilter, boolean)
-     * @see net.sf.ehcache.pool.sizeof.filter.SizeOfFilter
+     * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
     public AgentSizeOf(SizeOfFilter filter) throws UnsupportedOperationException {
         this(filter, true);
