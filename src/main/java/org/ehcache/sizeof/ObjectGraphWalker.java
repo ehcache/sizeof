@@ -63,6 +63,7 @@ final class ObjectGraphWalker {
     private final WeakIdentityConcurrentMap<Class<?>, Boolean> classCache =
         new WeakIdentityConcurrentMap<Class<?>, Boolean>();
 
+    private final boolean bypassFlyweight;
     private final SizeOfFilter sizeOfFilter;
 
     private final Visitor visitor;
@@ -76,12 +77,20 @@ final class ObjectGraphWalker {
      *
      * @param visitor the visitor to use
      * @param filter  the filtering
+     * @param bypassFlyweight  the filtering
      * @see Visitor
      * @see SizeOfFilter
      */
-    ObjectGraphWalker(Visitor visitor, SizeOfFilter filter) {
+    ObjectGraphWalker(Visitor visitor, SizeOfFilter filter, final boolean bypassFlyweight) {
+        if(visitor == null) {
+            throw new NullPointerException("Visitor can't be null");
+        }
+        if(filter == null) {
+            throw new NullPointerException("SizeOfFilter can't be null");
+        }
         this.visitor = visitor;
         this.sizeOfFilter = filter;
+        this.bypassFlyweight = bypassFlyweight;
     }
 
     private static boolean getVerboseSizeOfDebugLogging() {
@@ -158,7 +167,7 @@ final class ObjectGraphWalker {
             }
 
             Class<?> refClass = ref.getClass();
-            if (!isSharedFlyweight(ref) && shouldWalkClass(refClass)) {
+            if (!byPassIfFlyweight(ref) && shouldWalkClass(refClass)) {
                 if (refClass.isArray() && !refClass.getComponentType().isPrimitive()) {
                     for (int i = 0; i < Array.getLength(ref); i++) {
                         nullSafeAdd(toVisit, Array.get(ref, i));
@@ -276,9 +285,12 @@ final class ObjectGraphWalker {
         return fields;
     }
 
-    private static boolean isSharedFlyweight(Object obj) {
-        FlyweightType type = FlyweightType.getFlyweightType(obj.getClass());
-        return type != null && type.isShared(obj);
+    private boolean byPassIfFlyweight(Object obj) {
+        if(bypassFlyweight) {
+            FlyweightType type = FlyweightType.getFlyweightType(obj.getClass());
+            return type != null && type.isShared(obj);
+        }
+        return false;
     }
 
 }

@@ -42,7 +42,7 @@ public class AgentSizeOf extends SizeOf {
      * Builds a new SizeOf that will not filter fields and will cache reflected fields
      *
      * @throws UnsupportedOperationException If agent couldn't be loaded or isn't present
-     * @see #AgentSizeOf(SizeOfFilter, boolean)
+     * @see #AgentSizeOf(SizeOfFilter, boolean, boolean)
      */
     public AgentSizeOf() throws UnsupportedOperationException {
         this(new PassThroughFilter());
@@ -53,23 +53,24 @@ public class AgentSizeOf extends SizeOf {
      *
      * @param filter The filter to apply
      * @throws UnsupportedOperationException If agent couldn't be loaded or isn't present
-     * @see #AgentSizeOf(SizeOfFilter, boolean)
+     * @see #AgentSizeOf(SizeOfFilter, boolean, boolean)
      * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
     public AgentSizeOf(SizeOfFilter filter) throws UnsupportedOperationException {
-        this(filter, true);
+        this(filter, true, true);
     }
 
     /**
      * Builds a new SizeOf that will filter fields according to the provided filter
      *
-     * @param filter  The filter to apply
-     * @param caching whether to cache reflected fields
+     * @param filter            The filter to apply
+     * @param caching           whether to cache reflected fields
+     * @param bypassFlyweight   whether "Flyweight Objects" are to be ignored
      * @throws UnsupportedOperationException If agent couldn't be loaded or isn't present
      * @see SizeOfFilter
      */
-    public AgentSizeOf(SizeOfFilter filter, boolean caching) throws UnsupportedOperationException {
-        super(filter, caching);
+    public AgentSizeOf(SizeOfFilter filter, boolean caching, boolean bypassFlyweight) throws UnsupportedOperationException {
+        super(filter, caching, bypassFlyweight);
         if (!AGENT_LOADED) {
             throw new UnsupportedOperationException("Agent not available or loadable");
         }

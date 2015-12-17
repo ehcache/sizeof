@@ -63,6 +63,12 @@ public class SizeOfTest extends AbstractSizeOfTest {
     }
 
     @Test
+    public void testSizeOfFlyweight() throws Exception {
+        SizeOf sizeOf = new CrossCheckingSizeOf(false);
+        Assert.assertThat(deepSizeOf(sizeOf, 42), is(not(0L)));
+    }
+
+    @Test
     public void testSizeOf() throws Exception {
         Assume.assumeThat(CURRENT_JVM_INFORMATION.getMinimumObjectSize(), is(CURRENT_JVM_INFORMATION.getObjectAlignment()));
 

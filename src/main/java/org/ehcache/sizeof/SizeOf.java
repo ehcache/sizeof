@@ -35,18 +35,19 @@ public abstract class SizeOf {
     /**
      * Builds a new SizeOf that will filter fields according to the provided filter
      *
-     * @param fieldFilter The filter to apply
-     * @param caching     whether to cache reflected fields
+     * @param fieldFilter       The filter to apply
+     * @param caching           whether to cache reflected fields
+     * @param bypassFlyweight   whether "Flyweight Objects" are to be ignored
      * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
-    public SizeOf(SizeOfFilter fieldFilter, boolean caching) {
+    public SizeOf(SizeOfFilter fieldFilter, boolean caching, boolean bypassFlyweight) {
         ObjectGraphWalker.Visitor visitor;
         if (caching) {
             visitor = new CachingSizeOfVisitor();
         } else {
             visitor = new SizeOfVisitor();
         }
-        this.walker = new ObjectGraphWalker(visitor, fieldFilter);
+        this.walker = new ObjectGraphWalker(visitor, fieldFilter, bypassFlyweight);
     }
 
     /**
@@ -75,15 +76,19 @@ public abstract class SizeOf {
     }
 
     public static SizeOf newInstance(final SizeOfFilter... filters) {
+        return newInstance(true, true, filters);
+    }
+
+    public static SizeOf newInstance(boolean bypassFlyweight, boolean cache, final SizeOfFilter... filters) {
         final SizeOfFilter filter = new CombinationSizeOfFilter(filters);
         try {
-            return new AgentSizeOf(filter);
+            return new AgentSizeOf(filter, cache, bypassFlyweight);
         } catch (UnsupportedOperationException e) {
             try {
-                return new UnsafeSizeOf(filter);
+                return new UnsafeSizeOf(filter, cache, bypassFlyweight);
             } catch (UnsupportedOperationException f) {
                 try {
-                    return new ReflectionSizeOf(filter);
+                    return new ReflectionSizeOf(filter, cache, bypassFlyweight);
                 } catch (UnsupportedOperationException g) {
                     throw new UnsupportedOperationException("A suitable SizeOf engine could not be loaded: " + e + ", " + f + ", " + g);
                 }

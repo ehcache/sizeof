@@ -74,8 +74,8 @@ public class ObjectGraphWalkerTest {
             public boolean filterClass(Class<?> klazz) {
                 return true;
             }
-        }
-        );
+        },
+            true);
 
         String javaVersion = System.getProperty("java.version");
         if (javaVersion.startsWith("1.5")) {
@@ -141,7 +141,7 @@ public class ObjectGraphWalkerTest {
                 visited.incrementAndGet();
                 return -1;
             }
-        }, new PassThroughFilter());
+        }, new PassThroughFilter(), true);
 
         final AtomicInteger counter = new AtomicInteger();
         try {

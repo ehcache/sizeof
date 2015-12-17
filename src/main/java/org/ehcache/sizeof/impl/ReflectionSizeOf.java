@@ -41,7 +41,7 @@ public class ReflectionSizeOf extends SizeOf {
     /**
      * Builds a new SizeOf that will not filter fields and will cache reflected fields
      *
-     * @see #ReflectionSizeOf(SizeOfFilter, boolean)
+     * @see #ReflectionSizeOf(SizeOfFilter, boolean, boolean)
      */
     public ReflectionSizeOf() {
         this(new PassThroughFilter());
@@ -51,22 +51,23 @@ public class ReflectionSizeOf extends SizeOf {
      * Builds a new SizeOf that will filter fields and will cache reflected fields
      *
      * @param fieldFilter The filter to apply
-     * @see #ReflectionSizeOf(SizeOfFilter, boolean)
+     * @see #ReflectionSizeOf(SizeOfFilter, boolean, boolean)
      * @see SizeOfFilter
      */
     public ReflectionSizeOf(SizeOfFilter fieldFilter) {
-        this(fieldFilter, true);
+        this(fieldFilter, true, true);
     }
 
     /**
      * Builds a new SizeOf that will filter fields
      *
-     * @param fieldFilter The filter to apply
-     * @param caching     Whether to cache reflected fields
+     * @param fieldFilter       The filter to apply
+     * @param caching           Whether to cache reflected fields
+     * @param bypassFlyweight   whether "Flyweight Objects" are to be ignored
      * @see SizeOfFilter
      */
-    public ReflectionSizeOf(SizeOfFilter fieldFilter, boolean caching) {
-        super(fieldFilter, caching);
+    public ReflectionSizeOf(SizeOfFilter fieldFilter, boolean caching, boolean bypassFlyweight) {
+        super(fieldFilter, caching, bypassFlyweight);
 
         if (!CURRENT_JVM_INFORMATION.supportsReflectionSizeOf()) {
             LOGGER.warn("ReflectionSizeOf is not always accurate on the JVM (" + CURRENT_JVM_INFORMATION.getJvmDescription() +
