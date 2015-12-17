@@ -16,6 +16,8 @@
 
 package org.ehcache.sizeof.filters;
 
+import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,9 +29,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TypeFilter implements SizeOfFilter {
 
-    private final ConcurrentHashMap<Class<?>, Object> classesIgnored = new ConcurrentHashMap<Class<?>, Object>();
-    private final ConcurrentHashMap<Class<?>, Object> superClasses = new ConcurrentHashMap<Class<?>, Object>();
-    private final ConcurrentHashMap<Class<?>, ConcurrentMap<Field, Object>> fieldsIgnored = new ConcurrentHashMap<Class<?>, ConcurrentMap<Field, Object>>();
+    private final WeakIdentityConcurrentMap<Class<?>, Object> classesIgnored = new WeakIdentityConcurrentMap<Class<?>, Object>();
+    private final WeakIdentityConcurrentMap<Class<?>, Object> superClasses = new WeakIdentityConcurrentMap<Class<?>, Object>();
+    private final WeakIdentityConcurrentMap<Class<?>, ConcurrentMap<Field, Object>> fieldsIgnored = new WeakIdentityConcurrentMap<Class<?>, ConcurrentMap<Field, Object>>();
 
     @Override
     public Collection<Field> filterFields(final Class<?> klazz, final Collection<Field> fields) {
