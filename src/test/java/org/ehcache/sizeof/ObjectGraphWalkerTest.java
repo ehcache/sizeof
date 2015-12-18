@@ -17,23 +17,26 @@
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.SizeOfFilter;
+import org.ehcache.sizeof.impl.PassThroughFilter;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * @author Alex Snaps
  */
 public class ObjectGraphWalkerTest {
-    private final static int MAX_SIZEOF_DEPTH = 1000;
 
     @Test
     public void testWalksAGraph() {
@@ -76,9 +79,9 @@ public class ObjectGraphWalkerTest {
 
         String javaVersion = System.getProperty("java.version");
         if (javaVersion.startsWith("1.5")) {
-            assertThat(walker.walk(MAX_SIZEOF_DEPTH, false, new ReentrantReadWriteLock()), is(4L));
+            assertThat(walker.walk(new ReentrantReadWriteLock()), is(4L));
         } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")) {
-            assertThat(walker.walk(MAX_SIZEOF_DEPTH, false, new ReentrantReadWriteLock()), is(5L));
+            assertThat(walker.walk(new ReentrantReadWriteLock()), is(5L));
             assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
         } else {
             throw new AssertionError("Unexpected Java Version : " + javaVersion);
@@ -90,9 +93,9 @@ public class ObjectGraphWalkerTest {
         assertThat(map.isEmpty(), is(true));
 
         if (javaVersion.startsWith("1.5")) {
-            assertThat(walker.walk(MAX_SIZEOF_DEPTH, false, new SomeInnerClass()), is(13L));
+            assertThat(walker.walk(new SomeInnerClass()), is(13L));
         } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")) {
-            assertThat(walker.walk(MAX_SIZEOF_DEPTH, false, new SomeInnerClass()), is(14L));
+            assertThat(walker.walk(new SomeInnerClass()), is(14L));
             assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
         } else {
             throw new AssertionError("Unexpected Java Version : " + javaVersion);
@@ -110,8 +113,8 @@ public class ObjectGraphWalkerTest {
         assertThat(map.remove(int[].class.getName()), is(1L));
         assertThat(map.isEmpty(), is(true));
 
-        assertThat(walker.walk(MAX_SIZEOF_DEPTH, false, (Object)null), is(0L));
-        assertThat(walker.walk(MAX_SIZEOF_DEPTH, false), is(0L));
+        assertThat(walker.walk((Object)null), is(0L));
+        assertThat(walker.walk(), is(0L));
     }
 
     public class SomeInnerClass {
@@ -124,5 +127,37 @@ public class ObjectGraphWalkerTest {
         private final Object[] anArray = new Object[] { new Object(), new Object(), new Object(), one, two, two, three, four, value };
         private final int[] anIntArray = new int[] { 1, 2, 1300 };
 
+    }
+
+    @Test
+    public void testUsingListenerToLimit() {
+
+        final IllegalStateException illegalArgumentException = new IllegalStateException();
+        final int maxDepth = 2;
+
+        final AtomicInteger visited = new AtomicInteger();
+        ObjectGraphWalker walker = new ObjectGraphWalker(new ObjectGraphWalker.Visitor() {
+            public long visit(final Object object) {
+                visited.incrementAndGet();
+                return -1;
+            }
+        }, new PassThroughFilter());
+
+        final AtomicInteger counter = new AtomicInteger();
+        try {
+            walker.walk(new VisitorListener() {
+                @Override
+                public void visited(final Object object, final long size) {
+                    if (counter.incrementAndGet() >= maxDepth) {
+                        throw illegalArgumentException;
+                    }
+                    assertThat(size, is(-1L));
+                }
+            }, new Object(), new Object(), new Object(), new Object());
+            fail();
+        } catch (IllegalStateException e) {
+            assertThat(e, sameInstance(illegalArgumentException));
+        }
+        assertThat(visited.get(), is(maxDepth));
     }
 }
