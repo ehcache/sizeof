@@ -26,8 +26,12 @@ import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
  * It will try to load the agent through the JDK6 Attach API if available
  * All it's constructor do throw UnsupportedOperationException if the agent isn't present or couldn't be loaded dynamically
  *
+ * Inspired by Dr. Heinz Kabutz's Java Specialist Newsletter Issue #142
+ *
  * @author Chris Dennis
  * @author Alex Snaps
+ *
+ * @link http://www.javaspecialists.eu/archive/Issue142.html
  */
 public class AgentSizeOf extends SizeOf {
 
