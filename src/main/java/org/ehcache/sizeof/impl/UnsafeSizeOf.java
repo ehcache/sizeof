@@ -58,7 +58,7 @@ public class UnsafeSizeOf extends SizeOf {
      * Builds a new SizeOf that will not filter fields and will cache reflected fields
      *
      * @throws UnsupportedOperationException If Unsafe isn't accessible
-     * @see #UnsafeSizeOf(org.ehcache.sizeof.filters.SizeOfFilter, boolean)
+     * @see #UnsafeSizeOf(org.ehcache.sizeof.filters.SizeOfFilter, boolean, boolean)
      */
     public UnsafeSizeOf() throws UnsupportedOperationException {
         this(new PassThroughFilter());
@@ -69,23 +69,24 @@ public class UnsafeSizeOf extends SizeOf {
      *
      * @param filter The filter to apply
      * @throws UnsupportedOperationException If Unsafe isn't accessible
-     * @see #UnsafeSizeOf(org.ehcache.sizeof.filters.SizeOfFilter, boolean)
+     * @see #UnsafeSizeOf(org.ehcache.sizeof.filters.SizeOfFilter, boolean, boolean)
      * @see org.ehcache.sizeof.filters.SizeOfFilter
      */
     public UnsafeSizeOf(SizeOfFilter filter) throws UnsupportedOperationException {
-        this(filter, true);
+        this(filter, true, true);
     }
 
     /**
      * Builds a new SizeOf that will filter fields according to the provided filter
      *
-     * @param filter  The filter to apply
-     * @param caching whether to cache reflected fields
+     * @param filter            The filter to apply
+     * @param caching           whether to cache reflected fields
+     * @param bypassFlyweight   whether "Flyweight Objects" are to be ignored
      * @throws UnsupportedOperationException If Unsafe isn't accessible
      * @see SizeOfFilter
      */
-    public UnsafeSizeOf(SizeOfFilter filter, boolean caching) throws UnsupportedOperationException {
-        super(filter, caching);
+    public UnsafeSizeOf(SizeOfFilter filter, boolean caching, boolean bypassFlyweight) throws UnsupportedOperationException {
+        super(filter, caching, bypassFlyweight);
         if (UNSAFE == null) {
             throw new UnsupportedOperationException("sun.misc.Unsafe instance not accessible");
         }

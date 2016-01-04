@@ -23,12 +23,16 @@ public class CrossCheckingSizeOf extends SizeOf {
         this(new PassThroughFilter());
     }
 
-    public CrossCheckingSizeOf(SizeOfFilter filter) {
-        this(filter, true);
+    public CrossCheckingSizeOf(boolean bypassFlyweight) {
+        this(new PassThroughFilter(), true, bypassFlyweight);
     }
 
-    public CrossCheckingSizeOf(SizeOfFilter filter, boolean caching) {
-        super(filter, caching);
+    public CrossCheckingSizeOf(SizeOfFilter filter) {
+        this(filter, true, true);
+    }
+
+    public CrossCheckingSizeOf(SizeOfFilter filter, boolean caching, boolean bypassFlyweight) {
+        super(filter, caching, bypassFlyweight);
         engines = new ArrayList<SizeOf>();
 
         try {
