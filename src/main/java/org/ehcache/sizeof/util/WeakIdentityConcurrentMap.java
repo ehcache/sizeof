@@ -121,6 +121,11 @@ public final class WeakIdentityConcurrentMap<K, V> {
         return ks;
     }
 
+    public boolean containsKey(final K key) {
+        cleanUp();
+        return map.containsKey(new IdentityWeakReference<K>(key));
+    }
+
     /**
      * @param <T>
      */
