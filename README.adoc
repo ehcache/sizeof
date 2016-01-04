@@ -2,10 +2,37 @@
 
 == What is this?
 
-Simply by being on your application's classpath, ehcache-sizeofengine will automagically be picked up by http://www.ehcache.org[Ehcache].
-It replaces the +SizeOfEngine+ implementation that ships with Ehcache (2.8.0 onwards) with the +EhcacheSizeOfEngine+ implementation of this project, which lets you control what is then being sized.
+This library lets you size Java Object instances in bytes.
 
-== Using existing filter configurators
+[source,java,]
+----
+SizeOf sizeOf = SizeOf.newInstance(); // <1>
+long shallowSize = sizeOf.sizeOf(someObject); // <2>
+long deepSize = sizeOf.deepSizeOf(someObject); // <3>
+----
+<1> Retrieves one of the multiple engines supported;
+<2> Sizes `someObject` instance in bytes;
+<3> Sizes `someObject` instance in bytes, as well as all objects it references.
+
+=== The different engines
+
+When retrieving a new `SizeOf` instance with the static `org.ehcache.sizeof.SizeOf.newInstance`, the library will try to create of
+the following engines, in that order:
+
+ . `AgentSizeOf` : Which tries to attach an agent to the JVM process and size objects using `org.ehcache.sizeof.impl.AgentLoader.instrumentation`; otherwise
+ . `UnsafeSizeOf` : Which will determine Class layouts in memory using `sun.misc.Unsafe`; or finally
+ . `ReflectionSizeOf` : Which will introspect Class instances and try determining object sizes that way.
+
+Both the `ReflectionSizeOf` and the `AgentSizeOf` approach were very well covered in Dr. Heinz Kabutz's
+http://www.javaspecialists.eu/archive/Issue078.html[Java Specialist Newsletter issue #78] and http://www.javaspecialists.eu/archive/Issue142.html[issue #142] respectively.
+Different JVMs and their configurations may affect these sizes, see blob/master/src/main/java/org/ehcache/sizeof/impl/JvmInformation.java[JvmInformation enum] for more details.
+Finally, the `UnsafeSizeOf`, we've discovered and, as far as we know, were the first ones to use.
+
+== Avoiding sizing certain types
+
+In some cases you want to control how far the deep sizing goes. You can do this using the `org.ehcache.sizeof.Filter` SPI.
+
+=== Using existing filter configurators
 
 You simply need to add the jars of the modules that you want along side this project's jar
 

@@ -30,9 +30,12 @@ import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 
 /**
  * SizeOf that uses reflection to measure on heap size of object graphs
+ * Inspired by Dr. Heinz Kabutz's Java Specialist Newsletter Issue #78
  *
  * @author Alex Snaps
  * @author Chris Dennis
+ *
+ * @link http://www.javaspecialists.eu/archive/Issue078.html
  */
 public class ReflectionSizeOf extends SizeOf {
 
