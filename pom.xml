@@ -16,9 +16,9 @@
     <packaging>jar</packaging>
 
     <name>Ehcache SizeOf Engine</name>
-    <description><![CDATA[SizeOf engine, extracted from Ehcache]]></description>
+    <description>SizeOf engine, extracted from Ehcache</description>
 
-    <url>https://github.com/Terracotta-OSS/ehcache-sizeofengine</url>
+    <url>https://github.com/ehcache/sizeof</url>
 
     <organization>
         <name>Terracotta</name>
@@ -126,9 +126,9 @@
     </build>
 
     <scm>
-        <url>https://github.com/Terracotta-OSS/ehcache-sizeofengine</url>
-        <connection>scm:git:git@github.com:Terracotta-OSS/ehcache-sizeofengine.git</connection>
-        <developerConnection>scm:git:git@github.com:Terracotta-OSS/ehcache-sizeofengine.git</developerConnection>
+        <url>https://github.com/ehcache/sizeof</url>
+        <connection>scm:git:https://github.com/ehcache/sizeof.git</connection>
+        <developerConnection>scm:git:git@github.com:ehcache/sizeof.git</developerConnection>
     </scm>
 
 </project>
