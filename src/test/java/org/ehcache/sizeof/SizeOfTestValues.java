@@ -41,6 +41,9 @@ public class SizeOfTestValues {
             case 7:
                 hotspot32Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
+            case 8:
+                hotspot32Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
+                break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_32_BIT, hotspot32Bit);
         CORRECT_SIZES.put(JvmInformation.OPENJDK_32_BIT, hotspot32Bit);
@@ -66,6 +69,9 @@ public class SizeOfTestValues {
                 hotspot32BitWithConcurrentMarkAndSweep.put("deepSizeOf(new ReentrantReadWriteLock())", 104L);
                 break;
             case 7:
+                hotspot32BitWithConcurrentMarkAndSweep.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
+                break;
+            case 8:
                 hotspot32BitWithConcurrentMarkAndSweep.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
         }
@@ -95,6 +101,9 @@ public class SizeOfTestValues {
             case 7:
                 hotspot64Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
                 break;
+            case 8:
+                hotspot64Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
+                break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT, hotspot64Bit);
         CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT, hotspot64Bit);
@@ -122,6 +131,9 @@ public class SizeOfTestValues {
             case 7:
                 hotspot64BitWithCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
                 break;
+            case 8:
+                hotspot64BitWithCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
+                break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCMS);
         CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCMS);
@@ -146,6 +158,9 @@ public class SizeOfTestValues {
             case 7:
                 hotspot64BitWithCompressedOops.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
                 break;
+            case 8:
+                hotspot64BitWithCompressedOops.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
+                break;
         }
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT_WITH_COMPRESSED_OOPS, hotspot64BitWithCompressedOops);
         CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS, hotspot64BitWithCompressedOops);
@@ -168,6 +183,9 @@ public class SizeOfTestValues {
                 hotspot64BitWithCompressedOopsAndCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
             case 7:
+                hotspot64BitWithCompressedOopsAndCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
+                break;
+            case 8:
                 hotspot64BitWithCompressedOopsAndCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
                 break;
         }
