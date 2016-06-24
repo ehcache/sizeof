@@ -27,7 +27,7 @@ public class AgentLoaderRaceTest {
 
     @BeforeClass
     public static void checkForAgentLoading() {
-        Assume.assumeThat(System.getProperty("java.version"), anyOf(startsWith("1.6"), startsWith("1.7")));
+        Assume.assumeThat(System.getProperty("java.version"), anyOf(startsWith("1.6"), startsWith("1.7"), startsWith("1.8")));
         Assume.assumeThat(System.getProperty("java.version"), not(startsWith("1.7.0_02")));
         Assume.assumeThat(System.getProperty("java.vm.vendor"), not(startsWith("Apple")));
     }

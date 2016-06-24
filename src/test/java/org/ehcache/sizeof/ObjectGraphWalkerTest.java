@@ -80,7 +80,7 @@ public class ObjectGraphWalkerTest {
         String javaVersion = System.getProperty("java.version");
         if (javaVersion.startsWith("1.5")) {
             assertThat(walker.walk(new ReentrantReadWriteLock()), is(4L));
-        } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")) {
+        } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7") || javaVersion.startsWith("1.8")) {
             assertThat(walker.walk(new ReentrantReadWriteLock()), is(5L));
             assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
         } else {
@@ -94,7 +94,7 @@ public class ObjectGraphWalkerTest {
 
         if (javaVersion.startsWith("1.5")) {
             assertThat(walker.walk(new SomeInnerClass()), is(13L));
-        } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7")) {
+        } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7") || javaVersion.startsWith("1.8")) {
             assertThat(walker.walk(new SomeInnerClass()), is(14L));
             assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
         } else {
