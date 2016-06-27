@@ -39,8 +39,6 @@ public class SizeOfTestValues {
                 hotspot32Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 104L);
                 break;
             case 7:
-                hotspot32Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
-                break;
             case 8:
                 hotspot32Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
@@ -69,8 +67,6 @@ public class SizeOfTestValues {
                 hotspot32BitWithConcurrentMarkAndSweep.put("deepSizeOf(new ReentrantReadWriteLock())", 104L);
                 break;
             case 7:
-                hotspot32BitWithConcurrentMarkAndSweep.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
-                break;
             case 8:
                 hotspot32BitWithConcurrentMarkAndSweep.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
@@ -99,8 +95,6 @@ public class SizeOfTestValues {
                 hotspot64Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 176L);
                 break;
             case 7:
-                hotspot64Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
-                break;
             case 8:
                 hotspot64Bit.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
                 break;
@@ -129,8 +123,6 @@ public class SizeOfTestValues {
                 hotspot64BitWithCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 176L);
                 break;
             case 7:
-                hotspot64BitWithCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
-                break;
             case 8:
                 hotspot64BitWithCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
                 break;
@@ -156,8 +148,6 @@ public class SizeOfTestValues {
                 hotspot64BitWithCompressedOops.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
             case 7:
-                hotspot64BitWithCompressedOops.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
-                break;
             case 8:
                 hotspot64BitWithCompressedOops.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
                 break;
@@ -183,8 +173,6 @@ public class SizeOfTestValues {
                 hotspot64BitWithCompressedOopsAndCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
                 break;
             case 7:
-                hotspot64BitWithCompressedOopsAndCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
-                break;
             case 8:
                 hotspot64BitWithCompressedOopsAndCMS.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
                 break;
