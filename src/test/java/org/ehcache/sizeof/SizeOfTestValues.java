@@ -201,9 +201,9 @@ public class SizeOfTestValues {
         }
         CORRECT_SIZES.put(JvmInformation.JROCKIT_32_BIT, jrockit32Bit);
 
-        CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT, Collections.<String, Long>emptyMap());
+        CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT, Collections.emptyMap());
 
-        CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT_WITH_64GB_COMPRESSED_REFS, Collections.<String, Long>emptyMap());
+        CORRECT_SIZES.put(JvmInformation.JROCKIT_64_BIT_WITH_64GB_COMPRESSED_REFS, Collections.emptyMap());
 
         Map<String, Long> ibm32Bit = new HashMap<String, Long>();
         ibm32Bit.put("sizeOf(new Object())", 16L);
@@ -245,10 +245,10 @@ public class SizeOfTestValues {
         }
         CORRECT_SIZES.put(JvmInformation.IBM_64_BIT, ibm64Bit);
 
-        CORRECT_SIZES.put(JvmInformation.IBM_64_BIT_WITH_COMPRESSED_REFS, Collections.<String, Long>emptyMap());
+        CORRECT_SIZES.put(JvmInformation.IBM_64_BIT_WITH_COMPRESSED_REFS, Collections.emptyMap());
 
-        CORRECT_SIZES.put(JvmInformation.UNKNOWN_32_BIT, Collections.<String, Long>emptyMap());
-        CORRECT_SIZES.put(JvmInformation.UNKNOWN_64_BIT, Collections.<String, Long>emptyMap());
+        CORRECT_SIZES.put(JvmInformation.UNKNOWN_32_BIT, Collections.emptyMap());
+        CORRECT_SIZES.put(JvmInformation.UNKNOWN_64_BIT, Collections.emptyMap());
 
         for (JvmInformation jvm : JvmInformation.values()) {
             Assert.assertThat(CORRECT_SIZES, hasKey(jvm));

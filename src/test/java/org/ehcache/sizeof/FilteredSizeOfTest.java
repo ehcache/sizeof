@@ -99,7 +99,7 @@ public class FilteredSizeOfTest extends AbstractSizeOfTest {
     public static class ChildChildChild extends ChildChild {
     }
 
-    @com.terracotta.ehcache.special.annotation.IgnoreSizeOf(inherited = true)
+    @com.terracotta.ehcache.special.annotation.IgnoreSizeOf
     public static class MatchingPatternAnnotation {
     }
 

@@ -187,10 +187,10 @@
                         </goals>
                         <configuration>
                             <source>
-                                def jarFile = new File(project.build.directory, "/classes/org/ehcache/sizeof/impl/sizeof-agent.jar");
+                                def jarFile = new File(project.build.directory, "/classes/org/ehcache/sizeof/impl/sizeof-agent.jar")
                                 def agentClass = "/org/ehcache/sizeof/impl/SizeOfAgent.class"
                                 def agentDir = project.build.directory + "/agent-jar"
-                                def manifestDir = project.basedir.getAbsolutePath() + "/src/hidden/resources";
+                                def manifestDir = project.basedir.getAbsolutePath() + "/src/hidden/resources"
                                 ant.move(file: new File(project.build.outputDirectory, agentClass),
                                         tofile: new File(agentDir, agentClass))
 

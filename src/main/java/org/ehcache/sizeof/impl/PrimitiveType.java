@@ -58,11 +58,11 @@ enum PrimitiveType {
      */
     LONG(long.class, 8);
 
-    private Class<?> type;
-    private int size;
+    private final Class<?> type;
+    private final int size;
 
 
-    private PrimitiveType(Class<?> type, int size) {
+    PrimitiveType(Class<?> type, int size) {
         this.type = type;
         this.size = size;
     }

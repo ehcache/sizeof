@@ -67,7 +67,7 @@ final class AgentLoader {
                     } catch (ClassNotFoundException cnfe) {
                         for (File jar : getPossibleToolsJars()) {
                             try {
-                                Class<?> vmClass = new URLClassLoader(new URL[] { jar.toURL() }).loadClass(VIRTUAL_MACHINE_CLASSNAME);
+                                Class<?> vmClass = new URLClassLoader(new URL[] { jar.toURI().toURL() }).loadClass(VIRTUAL_MACHINE_CLASSNAME);
                                 LOGGER.info("Located valid 'tools.jar' at '{}'", jar);
                                 return vmClass;
                             } catch (Throwable t) {

@@ -186,7 +186,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * @param <T>
      */
-    public static interface CleanUpTask<T> {
+    public interface CleanUpTask<T> {
 
         /**
          * @param object

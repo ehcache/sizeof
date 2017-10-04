@@ -243,7 +243,7 @@ enum FlyweightType {
 
     private final Class<?> clazz;
 
-    private FlyweightType(final Class<?> clazz) {
+    FlyweightType(final Class<?> clazz) {
         this.clazz = clazz;
     }
 

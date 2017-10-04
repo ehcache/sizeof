@@ -27,5 +27,5 @@ public interface FilterConfigurator {
    * Invoked by the framework to let this instance configure the filter
    * @param filter the filter managed by the framework
    */
-  public void configure(Filter filter);
+  void configure(Filter filter);
 }

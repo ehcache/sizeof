@@ -39,7 +39,7 @@ public class ConfigurationTest {
         .addFilter(filter)
         .build();
     assertThat(configuration.getFilters().length, is(1));
-    assertThat(configuration.getFilters()[0], CoreMatchers.<SizeOfFilter>sameInstance(filter));
+    assertThat(configuration.getFilters()[0], CoreMatchers.sameInstance(filter));
     assertThat(configuration.isAbort(), is(true));
     assertThat(configuration.isSilent(), is(true));
     assertThat(configuration.getMaxDepth(), is(666));

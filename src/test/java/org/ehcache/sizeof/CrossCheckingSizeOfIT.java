@@ -51,7 +51,7 @@ public class CrossCheckingSizeOfIT {
     }
   };
   
-  private static final Collection<Class<?>> FIELD_TYPES = Arrays.<Class<?>>asList(
+  private static final Collection<Class<?>> FIELD_TYPES = Arrays.asList(
           Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, Object.class);
 
   @Test
@@ -112,7 +112,7 @@ public class CrossCheckingSizeOfIT {
       MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
       mv.visitCode();
       mv.visitVarInsn(ALOAD, 0);
-      mv.visitMethodInsn(INVOKESPECIAL, superClassDesc, "<init>", "()V");
+      mv.visitMethodInsn(INVOKESPECIAL, superClassDesc, "<init>", "()V", false);
       mv.visitInsn(RETURN);
       mv.visitMaxs(1, 1);
       mv.visitEnd();

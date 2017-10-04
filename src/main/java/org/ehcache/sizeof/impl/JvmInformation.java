@@ -438,7 +438,7 @@ public enum JvmInformation {
 
     private JvmInformation parent;
 
-    private JvmInformation(JvmInformation parent) {
+    JvmInformation(JvmInformation parent) {
         this.parent = parent;
     }
 
@@ -521,9 +521,7 @@ public enum JvmInformation {
      * Determine the JvmInformation for the current JVM.
      */
     private static JvmInformation getJvmInformation() {
-        JvmInformation jif = null;
-
-        jif = detectHotSpot();
+        JvmInformation jif = detectHotSpot();
 
         if (jif == null) {
             jif = detectOpenJDK();
@@ -647,7 +645,8 @@ public enum JvmInformation {
         if (getJRockitVmArgs().contains("-XXcompressedRefs:size=64GB")) {
             return true;
         }
-        if (Runtime.getRuntime().maxMemory() > TWENTY_FIVE_GB && Runtime.getRuntime().maxMemory() <= FIFTY_SEVEN_GB
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        if (maxMemory > TWENTY_FIVE_GB && maxMemory <= FIFTY_SEVEN_GB
             && getJRockitVmArgs().contains("-XXcompressedRefs:enable=true")) {
             return true;
         }

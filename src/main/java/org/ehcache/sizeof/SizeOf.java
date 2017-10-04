@@ -130,7 +130,7 @@ public abstract class SizeOf {
                     return size;
                 }
             } else {
-                return cachedSize.longValue();
+                return cachedSize;
             }
         }
     }

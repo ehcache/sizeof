@@ -48,7 +48,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
         System.err.println("java.vm.name:\t" + System.getProperty("java.vm.name", ""));
         System.err.println("java.vm.vendor:\t" + System.getProperty("java.vm.vendor", ""));
         assumeThat(System.getProperty("os.name"), not(containsString("AIX")));
-        deepSizeOf(new CrossCheckingSizeOf(), null);
+        deepSizeOf(new CrossCheckingSizeOf(), (Object) null);
         System.err.println("JVM identified as: " + JvmInformation.CURRENT_JVM_INFORMATION);
         if (JvmInformation.CURRENT_JVM_INFORMATION == UNKNOWN_64_BIT || JvmInformation.CURRENT_JVM_INFORMATION == UNKNOWN_32_BIT) {
             System.getProperties().list(System.err);
@@ -80,7 +80,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
         Assert.assertThat(deepSizeOf(sizeOf, BigDecimal.ZERO), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, MathContext.UNLIMITED), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Locale.ENGLISH), is(0L));
-        Assert.assertThat(deepSizeOf(sizeOf, Logger.global), is(0L));
+        Assert.assertThat(deepSizeOf(sizeOf, Logger.getGlobal()), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Collections.EMPTY_SET), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Collections.EMPTY_LIST), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Collections.EMPTY_MAP), is(0L));
@@ -92,7 +92,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
         Assert.assertThat(deepSizeOf(sizeOf, DatatypeConstants.TIME), is(0L));
 
         assertThat(sizeOf.sizeOf(new Object()), "sizeOf(new Object())");
-        assertThat(sizeOf.sizeOf(new Integer(1)), "sizeOf(new Integer(1))");
+        assertThat(sizeOf.sizeOf(1), "sizeOf(new Integer(1))");
         assertThat(sizeOf.sizeOf(1000), "sizeOf(1000)");
         assertThat(deepSizeOf(sizeOf, new SomeClass(false)), "deepSizeOf(new SomeClass(false))");
         assertThat(deepSizeOf(sizeOf, new SomeClass(true)), "deepSizeOf(new SomeClass(true))");

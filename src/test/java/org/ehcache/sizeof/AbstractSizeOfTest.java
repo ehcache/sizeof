@@ -36,7 +36,7 @@ abstract class AbstractSizeOfTest {
         IS_HOTSPOT = System.getProperty("java.vm.name", "").toLowerCase().contains("hotspot");
 
         IS_JROCKIT = System.getProperty("jrockit.version") != null ||
-                     System.getProperty("java.vm.name", "").toLowerCase().indexOf("jrockit") >= 0;
+                     System.getProperty("java.vm.name", "").toLowerCase().contains("jrockit");
 
         IS_IBM = System.getProperty("java.vm.name", "").contains("IBM") &&
                  System.getProperty("java.vm.vendor").contains("IBM");

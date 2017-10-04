@@ -19,7 +19,9 @@ package org.ehcache.sizeof;
 import org.ehcache.sizeof.filters.SizeOfFilter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Alex Snaps
@@ -58,7 +60,7 @@ public final class Configuration {
         private int maxDepth;
         private boolean silent;
         private boolean abort;
-        private ArrayList<SizeOfFilter> filters = new ArrayList<SizeOfFilter>();
+        private final List<SizeOfFilter> filters = new ArrayList<SizeOfFilter>();
 
         public Builder() {
         }
@@ -105,9 +107,7 @@ public final class Configuration {
         }
 
         public Builder removeFilters(SizeOfFilter... filters) {
-            for (SizeOfFilter filter : filters) {
-                this.filters.remove(filter);
-            }
+            this.filters.removeAll(Arrays.asList(filters));
             return this;
         }
 
