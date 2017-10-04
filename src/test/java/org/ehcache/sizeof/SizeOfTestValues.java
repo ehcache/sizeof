@@ -1,13 +1,14 @@
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.impl.JvmInformation;
-import org.hamcrest.collection.IsMapContainingKey;
 import org.junit.Assert;
 
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.hamcrest.Matchers.hasKey;
 
 /**
  * @author Alex Snaps
@@ -250,7 +251,7 @@ public class SizeOfTestValues {
         CORRECT_SIZES.put(JvmInformation.UNKNOWN_64_BIT, Collections.<String, Long>emptyMap());
 
         for (JvmInformation jvm : JvmInformation.values()) {
-            Assert.assertThat(CORRECT_SIZES, IsMapContainingKey.hasKey(jvm));
+            Assert.assertThat(CORRECT_SIZES, hasKey(jvm));
         }
     }
 
