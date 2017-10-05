@@ -728,7 +728,7 @@ public enum JvmInformation {
         try {
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             ObjectName name = ObjectName.getInstance(beanName);
-            Object attr = server.getAttribute(name, attrName).toString();
+            Object attr = server.getAttribute(name, attrName);
             if (attr != null) {
                 return attr.toString();
             }
