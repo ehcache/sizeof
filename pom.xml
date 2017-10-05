@@ -185,6 +185,13 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>src/hidden/**</exclude>
+                                <exclude>README.adoc</exclude>
+                                <exclude>**/*.txt</exclude>
+                            </excludes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
