@@ -202,7 +202,7 @@ final class AgentLoader {
                 instrumentation = (Instrumentation)System.getProperties().get(INSTRUMENTATION_INSTANCE_SYSTEM_PROPERTY_NAME);
             }
             if (instrumentation == null) {
-                Class sizeOfAgentClass = ClassLoader.getSystemClassLoader().loadClass(SIZEOF_AGENT_CLASSNAME);
+                Class<?> sizeOfAgentClass = ClassLoader.getSystemClassLoader().loadClass(SIZEOF_AGENT_CLASSNAME);
                 Method getInstrumentationMethod = sizeOfAgentClass.getMethod("getInstrumentation");
                 instrumentation = (Instrumentation)getInstrumentationMethod.invoke(sizeOfAgentClass);
             }

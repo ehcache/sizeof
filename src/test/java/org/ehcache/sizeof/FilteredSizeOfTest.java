@@ -66,6 +66,7 @@ public class FilteredSizeOfTest extends AbstractSizeOfTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCustomAnnotationFiltering() throws Exception {
         SizeOf sizeOf = new CrossCheckingSizeOf(new AnnotationSizeOfFilter());
         assertThat(deepSizeOf(sizeOf, new MatchingPatternOrNotAnnotationFilteredField()), allOf(greaterThan(128L), lessThan(16 * 1024L)));

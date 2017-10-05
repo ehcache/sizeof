@@ -54,6 +54,7 @@ public final class AnnotationProxyFactory {
      * @param referenceAnnotation type of the returned annotation
      * @return proxied customAnnotation with the type of referenceAnnotation
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Annotation> T getAnnotationProxy(Annotation customAnnotation, Class<T> referenceAnnotation) {
         InvocationHandler handler = new AnnotationInvocationHandler(customAnnotation);
         return (T)Proxy.newProxyInstance(referenceAnnotation.getClassLoader(), new Class[] { referenceAnnotation }, handler);
