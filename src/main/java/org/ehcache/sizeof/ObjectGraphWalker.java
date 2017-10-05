@@ -1,19 +1,18 @@
 /**
- *  Copyright Terracotta, Inc.
+ * Copyright Terracotta, Inc.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.SizeOfFilter;
@@ -25,11 +24,11 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.text.MessageFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.IdentityHashMap;
-import java.util.Stack;
 
 /**
  * This will walk an object graph and let you execute some "function" along the way
@@ -59,9 +58,9 @@ final class ObjectGraphWalker {
     private static final boolean USE_VERBOSE_DEBUG_LOGGING;
 
     private final WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Field>>> fieldCache =
-        new WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Field>>>();
+        new WeakIdentityConcurrentMap<>();
     private final WeakIdentityConcurrentMap<Class<?>, Boolean> classCache =
-        new WeakIdentityConcurrentMap<Class<?>, Boolean>();
+        new WeakIdentityConcurrentMap<>();
 
     private final boolean bypassFlyweight;
     private final SizeOfFilter sizeOfFilter;
@@ -139,8 +138,8 @@ final class ObjectGraphWalker {
             traversalDebugMessage = null;
         }
         long result = 0;
-        Stack<Object> toVisit = new Stack<Object>();
-        IdentityHashMap<Object, Object> visited = new IdentityHashMap<Object, Object>();
+        Deque<Object> toVisit = new ArrayDeque<>();
+        IdentityHashMap<Object, Object> visited = new IdentityHashMap<>();
 
         if (root != null) {
             if (traversalDebugMessage != null) {
@@ -205,19 +204,6 @@ final class ObjectGraphWalker {
         return result;
     }
 
-    private boolean checkMaxDepth(final int maxDepth, final boolean abortWhenMaxDepthExceeded, boolean warned,
-                                  final IdentityHashMap<Object, Object> visited) {
-        if (visited.size() >= maxDepth) {
-            if (abortWhenMaxDepthExceeded) {
-                throw new IllegalArgumentException(MessageFormat.format(ABORT_MESSAGE, maxDepth));
-            } else if (!warned) {
-                LOG.warn(MessageFormat.format(CONTINUE_MESSAGE, maxDepth));
-                warned = true;
-            }
-        }
-        return warned;
-    }
-
     /**
      * Returns the filtered fields for a particular type
      *
@@ -239,7 +225,7 @@ final class ObjectGraphWalker {
                     }
                 }
             }
-            fieldCache.put(refClass, new SoftReference<Collection<Field>>(result));
+            fieldCache.put(refClass, new SoftReference<>(result));
             return result;
         }
     }
@@ -253,7 +239,7 @@ final class ObjectGraphWalker {
         return cached;
     }
 
-    private static void nullSafeAdd(final Stack<Object> toVisit, final Object o) {
+    private static void nullSafeAdd(final Deque<Object> toVisit, final Object o) {
         if (o != null) {
             toVisit.push(o);
         }
@@ -266,7 +252,7 @@ final class ObjectGraphWalker {
      * @return all fields for that type
      */
     private static Collection<Field> getAllFields(Class<?> refClass) {
-        Collection<Field> fields = new ArrayList<Field>();
+        Collection<Field> fields = new ArrayList<>();
         for (Class<?> klazz = refClass; klazz != null; klazz = klazz.getSuperclass()) {
             for (Field field : klazz.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers()) &&

@@ -1,3 +1,18 @@
+/**
+ * Copyright Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.impl.JvmInformation;
@@ -48,14 +63,14 @@ public class SizeOfTest extends AbstractSizeOfTest {
         System.err.println("java.vm.name:\t" + System.getProperty("java.vm.name", ""));
         System.err.println("java.vm.vendor:\t" + System.getProperty("java.vm.vendor", ""));
         assumeThat(System.getProperty("os.name"), not(containsString("AIX")));
-        deepSizeOf(new CrossCheckingSizeOf(), null);
+        deepSizeOf(new CrossCheckingSizeOf(), (Object) null);
         System.err.println("JVM identified as: " + JvmInformation.CURRENT_JVM_INFORMATION);
         if (JvmInformation.CURRENT_JVM_INFORMATION == UNKNOWN_64_BIT || JvmInformation.CURRENT_JVM_INFORMATION == UNKNOWN_32_BIT) {
             System.getProperties().list(System.err);
         }
     }
 
-    private final Collection<AssertionError> sizeOfFailures = new LinkedList<AssertionError>();
+    private final Collection<AssertionError> sizeOfFailures = new LinkedList<>();
 
     @Test
     public void testCreatesSizeOfEngine() {
@@ -80,7 +95,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
         Assert.assertThat(deepSizeOf(sizeOf, BigDecimal.ZERO), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, MathContext.UNLIMITED), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Locale.ENGLISH), is(0L));
-        Assert.assertThat(deepSizeOf(sizeOf, Logger.global), is(0L));
+        Assert.assertThat(deepSizeOf(sizeOf, Logger.getGlobal()), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Collections.EMPTY_SET), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Collections.EMPTY_LIST), is(0L));
         Assert.assertThat(deepSizeOf(sizeOf, Collections.EMPTY_MAP), is(0L));
@@ -92,7 +107,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
         Assert.assertThat(deepSizeOf(sizeOf, DatatypeConstants.TIME), is(0L));
 
         assertThat(sizeOf.sizeOf(new Object()), "sizeOf(new Object())");
-        assertThat(sizeOf.sizeOf(new Integer(1)), "sizeOf(new Integer(1))");
+        assertThat(sizeOf.sizeOf(1), "sizeOf(new Integer(1))");
         assertThat(sizeOf.sizeOf(1000), "sizeOf(1000)");
         assertThat(deepSizeOf(sizeOf, new SomeClass(false)), "deepSizeOf(new SomeClass(false))");
         assertThat(deepSizeOf(sizeOf, new SomeClass(true)), "deepSizeOf(new SomeClass(true))");
@@ -113,8 +128,8 @@ public class SizeOfTest extends AbstractSizeOfTest {
             Assert.fail(sb.toString());
         }
 
-        List<Object> list1 = new ArrayList<Object>();
-        List<Object> list2 = new ArrayList<Object>();
+        List<Object> list1 = new ArrayList<>();
+        List<Object> list2 = new ArrayList<>();
 
         Object someInstance = new Object();
         list1.add(someInstance);

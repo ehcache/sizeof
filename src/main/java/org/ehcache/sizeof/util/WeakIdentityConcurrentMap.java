@@ -1,3 +1,18 @@
+/**
+ * Copyright Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ehcache.sizeof.util;
 
 import java.lang.ref.Reference;
@@ -17,8 +32,8 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class WeakIdentityConcurrentMap<K, V> {
 
-    private final ConcurrentMap<WeakReference<K>, V> map = new ConcurrentHashMap<WeakReference<K>, V>();
-    private final ReferenceQueue<K> queue = new ReferenceQueue<K>();
+    private final ConcurrentMap<WeakReference<K>, V> map = new ConcurrentHashMap<>();
+    private final ReferenceQueue<K> queue = new ReferenceQueue<>();
 
     private final CleanUpTask<V> cleanUpTask;
 
@@ -32,7 +47,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Constructor
      *
-     * @param cleanUpTask
+     * @param cleanUpTask task cleaning up references
      */
     public WeakIdentityConcurrentMap(final CleanUpTask<V> cleanUpTask) {
         this.cleanUpTask = cleanUpTask;
@@ -41,24 +56,29 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Puts into the underlying
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with <tt>key</tt>, or
+     *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
+     *         (A <tt>null</tt> return can also indicate that the map
+     *         previously associated <tt>null</tt> with <tt>key</tt>,
+     *         if the implementation supports <tt>null</tt> values.)
      */
     public V put(K key, V value) {
         cleanUp();
-        return map.put(new IdentityWeakReference<K>(key, queue), value);
+        return map.put(new IdentityWeakReference<>(key, queue), value);
     }
 
     /**
      * Remove from the underlying
      *
-     * @param key
-     * @return
+     * @param key key whose mapping is to be removed from the map
+     * @return the previous value associated with <tt>key</tt>, or
+     *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
      */
     public V remove(K key) {
         cleanUp();
-        return map.remove(new IdentityWeakReference<K>(key, queue));
+        return map.remove(new IdentityWeakReference<>(key, queue));
     }
 
     /**
@@ -73,22 +93,27 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Puts into the underlying
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with the specified key, or
+     *         {@code null} if there was no mapping for the key.
+     *         (A {@code null} return can also indicate that the map
+     *         previously associated {@code null} with the key,
+     *         if the implementation supports null values.)
      */
     public V putIfAbsent(K key, V value) {
         cleanUp();
-        return map.putIfAbsent(new IdentityWeakReference<K>(key, queue), value);
+        return map.putIfAbsent(new IdentityWeakReference<>(key, queue), value);
     }
 
     /**
-     * @param key
-     * @return
+     * @param key the key whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or
+     *         {@code null} if this map contains no mapping for the key
      */
     public V get(K key) {
         cleanUp();
-        return map.get(new IdentityWeakReference<K>(key));
+        return map.get(new IdentityWeakReference<>(key));
     }
 
     /**
@@ -106,12 +131,12 @@ public final class WeakIdentityConcurrentMap<K, V> {
     }
 
     /**
-     * @return
+     * @return a set view of the keys contained in this map
      */
     public Set<K> keySet() {
         cleanUp();
         K k;
-        final HashSet<K> ks = new HashSet<K>();
+        final HashSet<K> ks = new HashSet<>();
         for (WeakReference<K> weakReference : map.keySet()) {
             k = weakReference.get();
             if (k != null) {
@@ -123,7 +148,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
 
     public boolean containsKey(final K key) {
         cleanUp();
-        return map.containsKey(new IdentityWeakReference<K>(key));
+        return map.containsKey(new IdentityWeakReference<>(key));
     }
 
     /**
@@ -134,15 +159,15 @@ public final class WeakIdentityConcurrentMap<K, V> {
         private final int hashCode;
 
         /**
-         * @param reference
+         * @param reference the referenced object
          */
         IdentityWeakReference(T reference) {
             this(reference, null);
         }
 
         /**
-         * @param reference
-         * @param referenceQueue
+         * @param reference the references object
+         * @param referenceQueue the reference queue where references are kept
          */
         IdentityWeakReference(T reference, ReferenceQueue<T> referenceQueue) {
             super(reference, referenceQueue);
@@ -186,10 +211,10 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * @param <T>
      */
-    public static interface CleanUpTask<T> {
+    public interface CleanUpTask<T> {
 
         /**
-         * @param object
+         * @param object object to cleanup
          */
         void cleanUp(T object);
     }

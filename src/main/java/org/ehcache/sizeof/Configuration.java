@@ -1,25 +1,26 @@
 /**
- *  Copyright Terracotta, Inc.
+ * Copyright Terracotta, Inc.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.SizeOfFilter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Alex Snaps
@@ -58,7 +59,7 @@ public final class Configuration {
         private int maxDepth;
         private boolean silent;
         private boolean abort;
-        private ArrayList<SizeOfFilter> filters = new ArrayList<SizeOfFilter>();
+        private final List<SizeOfFilter> filters = new ArrayList<>();
 
         public Builder() {
         }
@@ -105,9 +106,7 @@ public final class Configuration {
         }
 
         public Builder removeFilters(SizeOfFilter... filters) {
-            for (SizeOfFilter filter : filters) {
-                this.filters.remove(filter);
-            }
+            this.filters.removeAll(Arrays.asList(filters));
             return this;
         }
 

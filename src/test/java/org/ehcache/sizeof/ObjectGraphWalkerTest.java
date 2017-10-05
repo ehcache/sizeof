@@ -1,19 +1,18 @@
 /**
- *  Copyright Terracotta, Inc.
+ * Copyright Terracotta, Inc.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.SizeOfFilter;
@@ -41,7 +40,7 @@ public class ObjectGraphWalkerTest {
     @Test
     public void testWalksAGraph() {
 
-        final Map<String, Long> map = new HashMap<String, Long>();
+        final Map<String, Long> map = new HashMap<>();
 
         ObjectGraphWalker walker = new ObjectGraphWalker(
             new ObjectGraphWalker.Visitor() {
@@ -136,23 +135,18 @@ public class ObjectGraphWalkerTest {
         final int maxDepth = 2;
 
         final AtomicInteger visited = new AtomicInteger();
-        ObjectGraphWalker walker = new ObjectGraphWalker(new ObjectGraphWalker.Visitor() {
-            public long visit(final Object object) {
-                visited.incrementAndGet();
-                return -1;
-            }
+        ObjectGraphWalker walker = new ObjectGraphWalker(object -> {
+            visited.incrementAndGet();
+            return -1;
         }, new PassThroughFilter(), true);
 
         final AtomicInteger counter = new AtomicInteger();
         try {
-            walker.walk(new VisitorListener() {
-                @Override
-                public void visited(final Object object, final long size) {
-                    if (counter.incrementAndGet() >= maxDepth) {
-                        throw illegalArgumentException;
-                    }
-                    assertThat(size, is(-1L));
+            walker.walk((object, size) -> {
+                if (counter.incrementAndGet() >= maxDepth) {
+                    throw illegalArgumentException;
                 }
+                assertThat(size, is(-1L));
             }, new Object(), new Object(), new Object(), new Object());
             fail();
         } catch (IllegalStateException e) {

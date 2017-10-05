@@ -1,19 +1,18 @@
 /**
- *  Copyright Terracotta, Inc.
+ * Copyright Terracotta, Inc.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package org.ehcache.sizeof.impl;
 
 import org.slf4j.Logger;
@@ -438,7 +437,7 @@ public enum JvmInformation {
 
     private JvmInformation parent;
 
-    private JvmInformation(JvmInformation parent) {
+    JvmInformation(JvmInformation parent) {
         this.parent = parent;
     }
 
@@ -521,9 +520,7 @@ public enum JvmInformation {
      * Determine the JvmInformation for the current JVM.
      */
     private static JvmInformation getJvmInformation() {
-        JvmInformation jif = null;
-
-        jif = detectHotSpot();
+        JvmInformation jif = detectHotSpot();
 
         if (jif == null) {
             jif = detectOpenJDK();
@@ -647,7 +644,8 @@ public enum JvmInformation {
         if (getJRockitVmArgs().contains("-XXcompressedRefs:size=64GB")) {
             return true;
         }
-        if (Runtime.getRuntime().maxMemory() > TWENTY_FIVE_GB && Runtime.getRuntime().maxMemory() <= FIFTY_SEVEN_GB
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        if (maxMemory > TWENTY_FIVE_GB && maxMemory <= FIFTY_SEVEN_GB
             && getJRockitVmArgs().contains("-XXcompressedRefs:enable=true")) {
             return true;
         }
@@ -730,7 +728,7 @@ public enum JvmInformation {
         try {
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             ObjectName name = ObjectName.getInstance(beanName);
-            Object attr = server.getAttribute(name, attrName).toString();
+            Object attr = server.getAttribute(name, attrName);
             if (attr != null) {
                 return attr.toString();
             }

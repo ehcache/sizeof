@@ -1,19 +1,18 @@
 /**
- *  Copyright Terracotta, Inc.
+ * Copyright Terracotta, Inc.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 package org.ehcache.sizeof;
 
 import java.lang.reflect.Field;
@@ -60,9 +59,6 @@ enum FlyweightType {
     // XXX There is no nullipotent way of determining the interned status of a string
     // There are numerous String constants within the JDK (see list at http://docs.oracle.com/javase/7/docs/api/constant-values.html),
     // but enumerating all of them would lead to lots of == tests.
-    /**
-     * java.lang.String
-     */
     //STRING(String.class) {
     //    @Override
     //    boolean isShared(final Object obj) { return obj == ((String)obj).intern(); }
@@ -214,7 +210,7 @@ enum FlyweightType {
         }
     };
 
-    private static final Map<Class<?>, FlyweightType> TYPE_MAPPINGS = new HashMap<Class<?>, FlyweightType>();
+    private static final Map<Class<?>, FlyweightType> TYPE_MAPPINGS = new HashMap<>();
 
     static {
         for (FlyweightType type : FlyweightType.values()) {
@@ -225,15 +221,13 @@ enum FlyweightType {
     private static final Set<Locale> GLOBAL_LOCALES;
 
     static {
-        Map<Locale, Void> locales = new IdentityHashMap<Locale, Void>();
+        Map<Locale, Void> locales = new IdentityHashMap<>();
         for (Field f : Locale.class.getFields()) {
             int modifiers = f.getModifiers();
             if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Locale.class.equals(f.getType())) {
                 try {
                     locales.put((Locale)f.get(null), null);
-                } catch (IllegalArgumentException e) {
-                    //
-                } catch (IllegalAccessException e) {
+                } catch (IllegalArgumentException | IllegalAccessException e) {
                     //
                 }
             }
@@ -243,7 +237,7 @@ enum FlyweightType {
 
     private final Class<?> clazz;
 
-    private FlyweightType(final Class<?> clazz) {
+    FlyweightType(final Class<?> clazz) {
         this.clazz = clazz;
     }
 

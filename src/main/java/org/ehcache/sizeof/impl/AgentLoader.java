@@ -1,3 +1,18 @@
+/**
+ * Copyright Terracotta, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.ehcache.sizeof.impl;
 
 
@@ -60,22 +75,20 @@ final class AgentLoader {
 
     private static Class<?> getVirtualMachineClass() throws ClassNotFoundException {
         try {
-            return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
-                public Class<?> run() throws Exception {
-                    try {
-                        return ClassLoader.getSystemClassLoader().loadClass(VIRTUAL_MACHINE_CLASSNAME);
-                    } catch (ClassNotFoundException cnfe) {
-                        for (File jar : getPossibleToolsJars()) {
-                            try {
-                                Class<?> vmClass = new URLClassLoader(new URL[] { jar.toURL() }).loadClass(VIRTUAL_MACHINE_CLASSNAME);
-                                LOGGER.info("Located valid 'tools.jar' at '{}'", jar);
-                                return vmClass;
-                            } catch (Throwable t) {
-                                LOGGER.info("Exception while loading tools.jar from '{}': {}", jar, t);
-                            }
+            return AccessController.doPrivileged((PrivilegedExceptionAction<Class<?>>) () -> {
+                try {
+                    return ClassLoader.getSystemClassLoader().loadClass(VIRTUAL_MACHINE_CLASSNAME);
+                } catch (ClassNotFoundException cnfe) {
+                    for (File jar : getPossibleToolsJars()) {
+                        try {
+                            Class<?> vmClass = new URLClassLoader(new URL[] { jar.toURI().toURL() }).loadClass(VIRTUAL_MACHINE_CLASSNAME);
+                            LOGGER.info("Located valid 'tools.jar' at '{}'", jar);
+                            return vmClass;
+                        } catch (Throwable t) {
+                            LOGGER.info("Exception while loading tools.jar from '{}': {}", jar, t);
                         }
-                        throw new ClassNotFoundException(VIRTUAL_MACHINE_CLASSNAME);
                     }
+                    throw new ClassNotFoundException(VIRTUAL_MACHINE_CLASSNAME);
                 }
             });
         } catch (PrivilegedActionException pae) {
@@ -88,7 +101,7 @@ final class AgentLoader {
     }
 
     private static List<File> getPossibleToolsJars() {
-        List<File> jars = new ArrayList<File>();
+        List<File> jars = new ArrayList<>();
 
         File javaHome = new File(System.getProperty("java.home"));
         File jreSourced = new File(javaHome, "lib/tools.jar");
@@ -160,25 +173,15 @@ final class AgentLoader {
             return new File(agent.getFile());
         } else {
             File temp = File.createTempFile("ehcache-sizeof-agent", ".jar");
-            try {
-                FileOutputStream fout = new FileOutputStream(temp);
-                try {
-                    InputStream in = agent.openStream();
-                    try {
-                        byte[] buffer = new byte[1024];
-                        while (true) {
-                            int read = in.read(buffer);
-                            if (read < 0) {
-                                break;
-                            } else {
-                                fout.write(buffer, 0, read);
-                            }
-                        }
-                    } finally {
-                        in.close();
+            try (FileOutputStream fout = new FileOutputStream(temp); InputStream in = agent.openStream()) {
+                byte[] buffer = new byte[1024];
+                while (true) {
+                    int read = in.read(buffer);
+                    if (read < 0) {
+                        break;
+                    } else {
+                        fout.write(buffer, 0, read);
                     }
-                } finally {
-                    fout.close();
                 }
             } finally {
                 temp.deleteOnExit();
@@ -199,7 +202,7 @@ final class AgentLoader {
                 instrumentation = (Instrumentation)System.getProperties().get(INSTRUMENTATION_INSTANCE_SYSTEM_PROPERTY_NAME);
             }
             if (instrumentation == null) {
-                Class sizeOfAgentClass = ClassLoader.getSystemClassLoader().loadClass(SIZEOF_AGENT_CLASSNAME);
+                Class<?> sizeOfAgentClass = ClassLoader.getSystemClassLoader().loadClass(SIZEOF_AGENT_CLASSNAME);
                 Method getInstrumentationMethod = sizeOfAgentClass.getMethod("getInstrumentation");
                 instrumentation = (Instrumentation)getInstrumentationMethod.invoke(sizeOfAgentClass);
             }
