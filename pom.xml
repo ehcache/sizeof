@@ -265,6 +265,9 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
