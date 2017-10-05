@@ -47,7 +47,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Constructor
      *
-     * @param cleanUpTask
+     * @param cleanUpTask task cleaning up references
      */
     public WeakIdentityConcurrentMap(final CleanUpTask<V> cleanUpTask) {
         this.cleanUpTask = cleanUpTask;
@@ -56,9 +56,13 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Puts into the underlying
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with <tt>key</tt>, or
+     *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
+     *         (A <tt>null</tt> return can also indicate that the map
+     *         previously associated <tt>null</tt> with <tt>key</tt>,
+     *         if the implementation supports <tt>null</tt> values.)
      */
     public V put(K key, V value) {
         cleanUp();
@@ -68,8 +72,9 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Remove from the underlying
      *
-     * @param key
-     * @return
+     * @param key key whose mapping is to be removed from the map
+     * @return the previous value associated with <tt>key</tt>, or
+     *         <tt>null</tt> if there was no mapping for <tt>key</tt>.
      */
     public V remove(K key) {
         cleanUp();
@@ -88,9 +93,13 @@ public final class WeakIdentityConcurrentMap<K, V> {
     /**
      * Puts into the underlying
      *
-     * @param key
-     * @param value
-     * @return
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return the previous value associated with the specified key, or
+     *         {@code null} if there was no mapping for the key.
+     *         (A {@code null} return can also indicate that the map
+     *         previously associated {@code null} with the key,
+     *         if the implementation supports null values.)
      */
     public V putIfAbsent(K key, V value) {
         cleanUp();
@@ -98,8 +107,9 @@ public final class WeakIdentityConcurrentMap<K, V> {
     }
 
     /**
-     * @param key
-     * @return
+     * @param key the key whose associated value is to be returned
+     * @return the value to which the specified key is mapped, or
+     *         {@code null} if this map contains no mapping for the key
      */
     public V get(K key) {
         cleanUp();
@@ -121,7 +131,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
     }
 
     /**
-     * @return
+     * @return a set view of the keys contained in this map
      */
     public Set<K> keySet() {
         cleanUp();
@@ -149,15 +159,15 @@ public final class WeakIdentityConcurrentMap<K, V> {
         private final int hashCode;
 
         /**
-         * @param reference
+         * @param reference the referenced object
          */
         IdentityWeakReference(T reference) {
             this(reference, null);
         }
 
         /**
-         * @param reference
-         * @param referenceQueue
+         * @param reference the references object
+         * @param referenceQueue the reference queue where references are kept
          */
         IdentityWeakReference(T reference, ReferenceQueue<T> referenceQueue) {
             super(reference, referenceQueue);
@@ -204,7 +214,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
     public interface CleanUpTask<T> {
 
         /**
-         * @param object
+         * @param object object to cleanup
          */
         void cleanUp(T object);
     }

@@ -50,8 +50,8 @@ public final class AnnotationProxyFactory {
     /**
      * Returns a proxy on the customAnnotation, having the same type than the referenceAnnotation
      *
-     * @param customAnnotation
-     * @param referenceAnnotation
+     * @param customAnnotation annotation proxied
+     * @param referenceAnnotation type of the returned annotation
      * @return proxied customAnnotation with the type of referenceAnnotation
      */
     public static <T extends Annotation> T getAnnotationProxy(Annotation customAnnotation, Class<T> referenceAnnotation) {
