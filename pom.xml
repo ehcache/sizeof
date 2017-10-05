@@ -123,8 +123,9 @@
                     <version>3.0.1</version>
                 </plugin>
                 <plugin>
+                    <!-- Note: 2.20.1 has a bug that made SizeOfTest flaky. So let's stay on an older version until we figure it out -->
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.20.1</version>
+                    <version>2.19.1</version>
                 </plugin>
 
                 <plugin>
