@@ -24,11 +24,11 @@ import java.lang.ref.SoftReference;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.text.MessageFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.IdentityHashMap;
-import java.util.Stack;
 
 /**
  * This will walk an object graph and let you execute some "function" along the way
@@ -138,7 +138,7 @@ final class ObjectGraphWalker {
             traversalDebugMessage = null;
         }
         long result = 0;
-        Stack<Object> toVisit = new Stack<>();
+        Deque<Object> toVisit = new ArrayDeque<>();
         IdentityHashMap<Object, Object> visited = new IdentityHashMap<>();
 
         if (root != null) {
@@ -204,19 +204,6 @@ final class ObjectGraphWalker {
         return result;
     }
 
-    private boolean checkMaxDepth(final int maxDepth, final boolean abortWhenMaxDepthExceeded, boolean warned,
-                                  final IdentityHashMap<Object, Object> visited) {
-        if (visited.size() >= maxDepth) {
-            if (abortWhenMaxDepthExceeded) {
-                throw new IllegalArgumentException(MessageFormat.format(ABORT_MESSAGE, maxDepth));
-            } else if (!warned) {
-                LOG.warn(MessageFormat.format(CONTINUE_MESSAGE, maxDepth));
-                warned = true;
-            }
-        }
-        return warned;
-    }
-
     /**
      * Returns the filtered fields for a particular type
      *
@@ -252,7 +239,7 @@ final class ObjectGraphWalker {
         return cached;
     }
 
-    private static void nullSafeAdd(final Stack<Object> toVisit, final Object o) {
+    private static void nullSafeAdd(final Deque<Object> toVisit, final Object o) {
         if (o != null) {
             toVisit.push(o);
         }

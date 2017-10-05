@@ -23,7 +23,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 
@@ -92,7 +93,7 @@ public class ReflectionSizeOf extends SizeOf {
         } else {
             long size = CURRENT_JVM_INFORMATION.getObjectHeaderSize();
 
-            Stack<Class<?>> classStack = new Stack<>();
+            Deque<Class<?>> classStack = new ArrayDeque<>();
             for (Class<?> klazz = aClass; klazz != null; klazz = klazz.getSuperclass()) {
                 classStack.push(klazz);
             }
