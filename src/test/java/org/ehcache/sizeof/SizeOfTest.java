@@ -70,7 +70,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
         }
     }
 
-    private final Collection<AssertionError> sizeOfFailures = new LinkedList<AssertionError>();
+    private final Collection<AssertionError> sizeOfFailures = new LinkedList<>();
 
     @Test
     public void testCreatesSizeOfEngine() {
@@ -128,8 +128,8 @@ public class SizeOfTest extends AbstractSizeOfTest {
             Assert.fail(sb.toString());
         }
 
-        List<Object> list1 = new ArrayList<Object>();
-        List<Object> list2 = new ArrayList<Object>();
+        List<Object> list1 = new ArrayList<>();
+        List<Object> list2 = new ArrayList<>();
 
         Object someInstance = new Object();
         list1.add(someInstance);

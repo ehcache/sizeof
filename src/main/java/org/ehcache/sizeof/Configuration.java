@@ -59,7 +59,7 @@ public final class Configuration {
         private int maxDepth;
         private boolean silent;
         private boolean abort;
-        private final List<SizeOfFilter> filters = new ArrayList<SizeOfFilter>();
+        private final List<SizeOfFilter> filters = new ArrayList<>();
 
         public Builder() {
         }

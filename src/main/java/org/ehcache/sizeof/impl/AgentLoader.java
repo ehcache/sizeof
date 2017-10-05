@@ -75,22 +75,20 @@ final class AgentLoader {
 
     private static Class<?> getVirtualMachineClass() throws ClassNotFoundException {
         try {
-            return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
-                public Class<?> run() throws Exception {
-                    try {
-                        return ClassLoader.getSystemClassLoader().loadClass(VIRTUAL_MACHINE_CLASSNAME);
-                    } catch (ClassNotFoundException cnfe) {
-                        for (File jar : getPossibleToolsJars()) {
-                            try {
-                                Class<?> vmClass = new URLClassLoader(new URL[] { jar.toURI().toURL() }).loadClass(VIRTUAL_MACHINE_CLASSNAME);
-                                LOGGER.info("Located valid 'tools.jar' at '{}'", jar);
-                                return vmClass;
-                            } catch (Throwable t) {
-                                LOGGER.info("Exception while loading tools.jar from '{}': {}", jar, t);
-                            }
+            return AccessController.doPrivileged((PrivilegedExceptionAction<Class<?>>) () -> {
+                try {
+                    return ClassLoader.getSystemClassLoader().loadClass(VIRTUAL_MACHINE_CLASSNAME);
+                } catch (ClassNotFoundException cnfe) {
+                    for (File jar : getPossibleToolsJars()) {
+                        try {
+                            Class<?> vmClass = new URLClassLoader(new URL[] { jar.toURI().toURL() }).loadClass(VIRTUAL_MACHINE_CLASSNAME);
+                            LOGGER.info("Located valid 'tools.jar' at '{}'", jar);
+                            return vmClass;
+                        } catch (Throwable t) {
+                            LOGGER.info("Exception while loading tools.jar from '{}': {}", jar, t);
                         }
-                        throw new ClassNotFoundException(VIRTUAL_MACHINE_CLASSNAME);
                     }
+                    throw new ClassNotFoundException(VIRTUAL_MACHINE_CLASSNAME);
                 }
             });
         } catch (PrivilegedActionException pae) {
@@ -103,7 +101,7 @@ final class AgentLoader {
     }
 
     private static List<File> getPossibleToolsJars() {
-        List<File> jars = new ArrayList<File>();
+        List<File> jars = new ArrayList<>();
 
         File javaHome = new File(System.getProperty("java.home"));
         File jreSourced = new File(javaHome, "lib/tools.jar");
@@ -175,25 +173,15 @@ final class AgentLoader {
             return new File(agent.getFile());
         } else {
             File temp = File.createTempFile("ehcache-sizeof-agent", ".jar");
-            try {
-                FileOutputStream fout = new FileOutputStream(temp);
-                try {
-                    InputStream in = agent.openStream();
-                    try {
-                        byte[] buffer = new byte[1024];
-                        while (true) {
-                            int read = in.read(buffer);
-                            if (read < 0) {
-                                break;
-                            } else {
-                                fout.write(buffer, 0, read);
-                            }
-                        }
-                    } finally {
-                        in.close();
+            try (FileOutputStream fout = new FileOutputStream(temp); InputStream in = agent.openStream()) {
+                byte[] buffer = new byte[1024];
+                while (true) {
+                    int read = in.read(buffer);
+                    if (read < 0) {
+                        break;
+                    } else {
+                        fout.write(buffer, 0, read);
                     }
-                } finally {
-                    fout.close();
                 }
             } finally {
                 temp.deleteOnExit();

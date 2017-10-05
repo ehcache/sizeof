@@ -58,9 +58,9 @@ final class ObjectGraphWalker {
     private static final boolean USE_VERBOSE_DEBUG_LOGGING;
 
     private final WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Field>>> fieldCache =
-        new WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Field>>>();
+        new WeakIdentityConcurrentMap<>();
     private final WeakIdentityConcurrentMap<Class<?>, Boolean> classCache =
-        new WeakIdentityConcurrentMap<Class<?>, Boolean>();
+        new WeakIdentityConcurrentMap<>();
 
     private final boolean bypassFlyweight;
     private final SizeOfFilter sizeOfFilter;
@@ -138,8 +138,8 @@ final class ObjectGraphWalker {
             traversalDebugMessage = null;
         }
         long result = 0;
-        Stack<Object> toVisit = new Stack<Object>();
-        IdentityHashMap<Object, Object> visited = new IdentityHashMap<Object, Object>();
+        Stack<Object> toVisit = new Stack<>();
+        IdentityHashMap<Object, Object> visited = new IdentityHashMap<>();
 
         if (root != null) {
             if (traversalDebugMessage != null) {
@@ -238,7 +238,7 @@ final class ObjectGraphWalker {
                     }
                 }
             }
-            fieldCache.put(refClass, new SoftReference<Collection<Field>>(result));
+            fieldCache.put(refClass, new SoftReference<>(result));
             return result;
         }
     }
@@ -265,7 +265,7 @@ final class ObjectGraphWalker {
      * @return all fields for that type
      */
     private static Collection<Field> getAllFields(Class<?> refClass) {
-        Collection<Field> fields = new ArrayList<Field>();
+        Collection<Field> fields = new ArrayList<>();
         for (Class<?> klazz = refClass; klazz != null; klazz = klazz.getSuperclass()) {
             for (Field field : klazz.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers()) &&

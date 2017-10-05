@@ -19,7 +19,6 @@ import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -28,19 +27,15 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class TypeFilter implements SizeOfFilter {
 
-    private final WeakIdentityConcurrentMap<Class<?>, Object> classesIgnored = new WeakIdentityConcurrentMap<Class<?>, Object>();
-    private final WeakIdentityConcurrentMap<Class<?>, Object> superClasses = new WeakIdentityConcurrentMap<Class<?>, Object>();
-    private final WeakIdentityConcurrentMap<Class<?>, ConcurrentMap<Field, Object>> fieldsIgnored = new WeakIdentityConcurrentMap<Class<?>, ConcurrentMap<Field, Object>>();
+    private final WeakIdentityConcurrentMap<Class<?>, Object> classesIgnored = new WeakIdentityConcurrentMap<>();
+    private final WeakIdentityConcurrentMap<Class<?>, Object> superClasses = new WeakIdentityConcurrentMap<>();
+    private final WeakIdentityConcurrentMap<Class<?>, ConcurrentMap<Field, Object>> fieldsIgnored = new WeakIdentityConcurrentMap<>();
 
     @Override
     public Collection<Field> filterFields(final Class<?> klazz, final Collection<Field> fields) {
         final ConcurrentMap<Field, Object> fieldsToIgnore = fieldsIgnored.get(klazz);
         if (fieldsToIgnore != null) {
-            for (Iterator<Field> iterator = fields.iterator(); iterator.hasNext(); ) {
-                if (fieldsToIgnore.containsKey(iterator.next())) {
-                    iterator.remove();
-                }
-            }
+            fields.removeIf(fieldsToIgnore::containsKey);
         }
         return fields;
     }
@@ -72,7 +67,7 @@ public class TypeFilter implements SizeOfFilter {
         final Class<?> klazz = fieldToFilterOut.getDeclaringClass();
         ConcurrentMap<Field, Object> fields = fieldsIgnored.get(klazz);
         if (fields == null) {
-            fields = new ConcurrentHashMap<Field, Object>();
+            fields = new ConcurrentHashMap<>();
             final ConcurrentMap<Field, Object> previous = fieldsIgnored.putIfAbsent(klazz, fields);
             if (previous != null) {
                 fields = previous;

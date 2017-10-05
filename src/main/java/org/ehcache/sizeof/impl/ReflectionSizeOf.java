@@ -92,7 +92,7 @@ public class ReflectionSizeOf extends SizeOf {
         } else {
             long size = CURRENT_JVM_INFORMATION.getObjectHeaderSize();
 
-            Stack<Class<?>> classStack = new Stack<Class<?>>();
+            Stack<Class<?>> classStack = new Stack<>();
             for (Class<?> klazz = aClass; klazz != null; klazz = klazz.getSuperclass()) {
                 classStack.push(klazz);
             }

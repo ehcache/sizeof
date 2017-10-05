@@ -43,7 +43,7 @@ public class TypeFilterTest {
     public void testStoresFieldsToFilter() throws NoSuchFieldException {
         TypeFilter filter = new TypeFilter();
         final Field field = String.class.getDeclaredField("value");
-        final HashSet<Field> fields = new HashSet<Field>();
+        final HashSet<Field> fields = new HashSet<>();
         Collections.addAll(fields, String.class.getDeclaredFields());
         assertThat(fields.contains(field), is(true));
         filter.addField(field);

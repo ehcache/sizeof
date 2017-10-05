@@ -16,7 +16,6 @@
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.AnnotationSizeOfFilter;
-import org.ehcache.sizeof.filters.SizeOfFilter;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 

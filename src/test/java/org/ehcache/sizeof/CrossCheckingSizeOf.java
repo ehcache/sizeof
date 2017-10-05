@@ -48,7 +48,7 @@ public class CrossCheckingSizeOf extends SizeOf {
 
     public CrossCheckingSizeOf(SizeOfFilter filter, boolean caching, boolean bypassFlyweight) {
         super(filter, caching, bypassFlyweight);
-        engines = new ArrayList<SizeOf>();
+        engines = new ArrayList<>();
 
         try {
             engines.add(new AgentSizeOf());

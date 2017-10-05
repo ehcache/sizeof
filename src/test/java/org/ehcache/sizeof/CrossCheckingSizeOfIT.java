@@ -43,12 +43,7 @@ import static org.objectweb.asm.Opcodes.V1_6;
  */
 public class CrossCheckingSizeOfIT {
 
-  private static final Comparator<Class<?>> COMPARATOR = new Comparator<Class<?>>() {
-
-    public int compare(Class<?> o1, Class<?> o2) {
-      return o1.getName().compareTo(o2.getName());
-    }
-  };
+  private static final Comparator<Class<?>> COMPARATOR = Comparator.comparing(Class::getName);
   
   private static final Collection<Class<?>> FIELD_TYPES = Arrays.asList(
           Byte.TYPE, Short.TYPE, Integer.TYPE, Long.TYPE, Object.class);
@@ -84,13 +79,13 @@ public class CrossCheckingSizeOfIT {
       return Collections.singleton(Collections.<T>emptyList());
     } else {
       Set<List<T>> subperms = permutations(choices, comparator, count -1);
-      Set<List<T>> perms = new HashSet<List<T>>(subperms.size() * choices.size());
+      Set<List<T>> perms = new HashSet<>(subperms.size() * choices.size());
       for (List<T> sub : subperms) {
         for (T element : choices) {
-          List<T> p = new ArrayList<T>(sub.size() + 1);
+          List<T> p = new ArrayList<>(sub.size() + 1);
           p.addAll(sub);
           p.add(element);
-          Collections.sort(p, comparator);
+          p.sort(comparator);
           perms.add(p);
         }
       }
@@ -127,9 +122,7 @@ public class CrossCheckingSizeOfIT {
     
     try {
       return loader.loadClass("A" + (classIndex - 1));
-    } catch (ClassNotFoundException e) {
-      throw new AssertionError(e);
-    } catch (NoClassDefFoundError e) {
+    } catch (ClassNotFoundException | NoClassDefFoundError e) {
       throw new AssertionError(e);
     }
   }

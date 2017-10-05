@@ -40,7 +40,7 @@ public class ObjectGraphWalkerTest {
     @Test
     public void testWalksAGraph() {
 
-        final Map<String, Long> map = new HashMap<String, Long>();
+        final Map<String, Long> map = new HashMap<>();
 
         ObjectGraphWalker walker = new ObjectGraphWalker(
             new ObjectGraphWalker.Visitor() {
@@ -135,23 +135,18 @@ public class ObjectGraphWalkerTest {
         final int maxDepth = 2;
 
         final AtomicInteger visited = new AtomicInteger();
-        ObjectGraphWalker walker = new ObjectGraphWalker(new ObjectGraphWalker.Visitor() {
-            public long visit(final Object object) {
-                visited.incrementAndGet();
-                return -1;
-            }
+        ObjectGraphWalker walker = new ObjectGraphWalker(object -> {
+            visited.incrementAndGet();
+            return -1;
         }, new PassThroughFilter(), true);
 
         final AtomicInteger counter = new AtomicInteger();
         try {
-            walker.walk(new VisitorListener() {
-                @Override
-                public void visited(final Object object, final long size) {
-                    if (counter.incrementAndGet() >= maxDepth) {
-                        throw illegalArgumentException;
-                    }
-                    assertThat(size, is(-1L));
+            walker.walk((object, size) -> {
+                if (counter.incrementAndGet() >= maxDepth) {
+                    throw illegalArgumentException;
                 }
+                assertThat(size, is(-1L));
             }, new Object(), new Object(), new Object(), new Object());
             fail();
         } catch (IllegalStateException e) {

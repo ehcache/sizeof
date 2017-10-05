@@ -112,7 +112,7 @@ public abstract class SizeOf {
      * Will Cache already visited types
      */
     private class CachingSizeOfVisitor implements ObjectGraphWalker.Visitor {
-        private final WeakIdentityConcurrentMap<Class<?>, Long> cache = new WeakIdentityConcurrentMap<Class<?>, Long>();
+        private final WeakIdentityConcurrentMap<Class<?>, Long> cache = new WeakIdentityConcurrentMap<>();
 
         /**
          * {@inheritDoc}

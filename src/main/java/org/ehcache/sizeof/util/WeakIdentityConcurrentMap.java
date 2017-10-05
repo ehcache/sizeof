@@ -32,8 +32,8 @@ import java.util.concurrent.ConcurrentMap;
  */
 public final class WeakIdentityConcurrentMap<K, V> {
 
-    private final ConcurrentMap<WeakReference<K>, V> map = new ConcurrentHashMap<WeakReference<K>, V>();
-    private final ReferenceQueue<K> queue = new ReferenceQueue<K>();
+    private final ConcurrentMap<WeakReference<K>, V> map = new ConcurrentHashMap<>();
+    private final ReferenceQueue<K> queue = new ReferenceQueue<>();
 
     private final CleanUpTask<V> cleanUpTask;
 
@@ -66,7 +66,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
      */
     public V put(K key, V value) {
         cleanUp();
-        return map.put(new IdentityWeakReference<K>(key, queue), value);
+        return map.put(new IdentityWeakReference<>(key, queue), value);
     }
 
     /**
@@ -78,7 +78,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
      */
     public V remove(K key) {
         cleanUp();
-        return map.remove(new IdentityWeakReference<K>(key, queue));
+        return map.remove(new IdentityWeakReference<>(key, queue));
     }
 
     /**
@@ -103,7 +103,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
      */
     public V putIfAbsent(K key, V value) {
         cleanUp();
-        return map.putIfAbsent(new IdentityWeakReference<K>(key, queue), value);
+        return map.putIfAbsent(new IdentityWeakReference<>(key, queue), value);
     }
 
     /**
@@ -113,7 +113,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
      */
     public V get(K key) {
         cleanUp();
-        return map.get(new IdentityWeakReference<K>(key));
+        return map.get(new IdentityWeakReference<>(key));
     }
 
     /**
@@ -136,7 +136,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
     public Set<K> keySet() {
         cleanUp();
         K k;
-        final HashSet<K> ks = new HashSet<K>();
+        final HashSet<K> ks = new HashSet<>();
         for (WeakReference<K> weakReference : map.keySet()) {
             k = weakReference.get();
             if (k != null) {
@@ -148,7 +148,7 @@ public final class WeakIdentityConcurrentMap<K, V> {
 
     public boolean containsKey(final K key) {
         cleanUp();
-        return map.containsKey(new IdentityWeakReference<K>(key));
+        return map.containsKey(new IdentityWeakReference<>(key));
     }
 
     /**

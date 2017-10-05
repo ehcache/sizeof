@@ -31,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public final class SizeOfFilterSource implements Filter {
 
-    private final CopyOnWriteArrayList<SizeOfFilter> filters = new CopyOnWriteArrayList<SizeOfFilter>();
+    private final CopyOnWriteArrayList<SizeOfFilter> filters = new CopyOnWriteArrayList<>();
     private final TypeFilter typeFilter = new TypeFilter();
 
     public SizeOfFilterSource(boolean registerAnnotationFilter) {
@@ -54,7 +54,7 @@ public final class SizeOfFilterSource implements Filter {
     }
 
     public SizeOfFilter[] getFilters() {
-        List<SizeOfFilter> allFilters = new ArrayList<SizeOfFilter>(filters);
+        List<SizeOfFilter> allFilters = new ArrayList<>(filters);
         return allFilters.toArray(new SizeOfFilter[allFilters.size()]);
     }
 

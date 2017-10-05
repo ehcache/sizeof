@@ -210,7 +210,7 @@ enum FlyweightType {
         }
     };
 
-    private static final Map<Class<?>, FlyweightType> TYPE_MAPPINGS = new HashMap<Class<?>, FlyweightType>();
+    private static final Map<Class<?>, FlyweightType> TYPE_MAPPINGS = new HashMap<>();
 
     static {
         for (FlyweightType type : FlyweightType.values()) {
@@ -221,15 +221,13 @@ enum FlyweightType {
     private static final Set<Locale> GLOBAL_LOCALES;
 
     static {
-        Map<Locale, Void> locales = new IdentityHashMap<Locale, Void>();
+        Map<Locale, Void> locales = new IdentityHashMap<>();
         for (Field f : Locale.class.getFields()) {
             int modifiers = f.getModifiers();
             if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Locale.class.equals(f.getType())) {
                 try {
                     locales.put((Locale)f.get(null), null);
-                } catch (IllegalArgumentException e) {
-                    //
-                } catch (IllegalAccessException e) {
+                } catch (IllegalArgumentException | IllegalAccessException e) {
                     //
                 }
             }
