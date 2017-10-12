@@ -54,17 +54,6 @@ public class JvmInformationTest {
     }
 
     @Test
-    public void jrockit32Bits() {
-        verifyJvmInfo(JvmInformation.JROCKIT_32_BIT, 8, 8, 4, 8, 8, 16, 4, true, false, true);
-    }
-
-    @Test
-    public void jrockit64Bits() {
-        verifyJvmInfo(JvmInformation.JROCKIT_64_BIT, 8, 8, 4, 8, 8, 16, 4, true, false, true);
-        verifyJvmInfo(JvmInformation.JROCKIT_64_BIT_WITH_64GB_COMPRESSED_REFS, 16, 16, 4, 16, 16, 24, 4, true, false, true);
-    }
-
-    @Test
     public void ibm32Bits() {
         verifyJvmInfo(JvmInformation.IBM_32_BIT, 0, 0, 4, 8, 8, 16, 4, true, false, true);
     }

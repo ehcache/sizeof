@@ -76,29 +76,18 @@ public class ObjectGraphWalkerTest {
         },
             true);
 
-        String javaVersion = System.getProperty("java.version");
-        if (javaVersion.startsWith("1.5")) {
-            assertThat(walker.walk(new ReentrantReadWriteLock()), is(4L));
-        } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7") || javaVersion.startsWith("1.8")) {
-            assertThat(walker.walk(new ReentrantReadWriteLock()), is(5L));
-            assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
-        } else {
-            throw new AssertionError("Unexpected Java Version : " + javaVersion);
-        }
+        assertThat(walker.walk(new ReentrantReadWriteLock()), is(5L));
+        assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
+
         assertThat(map.remove(ReentrantReadWriteLock.class.getName()), is(1L));
         assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$NonfairSync"), is(1L));
         assertThat(map.remove(ReentrantReadWriteLock.ReadLock.class.getName()), is(1L));
         assertThat(map.remove(ReentrantReadWriteLock.WriteLock.class.getName()), is(1L));
         assertThat(map.isEmpty(), is(true));
 
-        if (javaVersion.startsWith("1.5")) {
-            assertThat(walker.walk(new SomeInnerClass()), is(13L));
-        } else if (javaVersion.startsWith("1.6") || javaVersion.startsWith("1.7") || javaVersion.startsWith("1.8")) {
-            assertThat(walker.walk(new SomeInnerClass()), is(14L));
-            assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
-        } else {
-            throw new AssertionError("Unexpected Java Version : " + javaVersion);
-        }
+        assertThat(walker.walk(new SomeInnerClass()), is(14L));
+        assertThat(map.remove("java.util.concurrent.locks.ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter"), is(1L));
+
         assertThat(map.remove(SomeInnerClass.class.getName()), is(1L));
         assertThat(map.remove(this.getClass().getName()), is(1L));
         assertThat(map.remove(Object.class.getName()), is(5L));
