@@ -40,13 +40,6 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
  */
 public class AgentLoaderRaceTest {
 
-    @BeforeClass
-    public static void checkForAgentLoading() {
-        Assume.assumeThat(System.getProperty("java.version"), anyOf(startsWith("1.6"), startsWith("1.7"), startsWith("1.8")));
-        Assume.assumeThat(System.getProperty("java.version"), not(startsWith("1.7.0_02")));
-        Assume.assumeThat(System.getProperty("java.vm.vendor"), not(startsWith("Apple")));
-    }
-
     /*
      * This test tries to expose an agent loading race seen in MNK-3255.
      *

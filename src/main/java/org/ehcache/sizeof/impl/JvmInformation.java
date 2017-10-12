@@ -282,85 +282,6 @@ public enum JvmInformation {
     },
 
     /**
-     * Represents 32-Bit JRockit JVM"
-     */
-    JROCKIT_32_BIT(UNKNOWN_32_BIT) {
-
-        @Override
-        public int getAgentSizeOfAdjustment() {
-            return 8;
-        }
-
-        @Override
-        public int getFieldOffsetAdjustment() {
-            return 8;
-        }
-
-        @Override
-        public int getObjectHeaderSize() {
-            return 16;
-        }
-
-        @Override
-        public String getJvmDescription() {
-            return "32-Bit JRockit JVM";
-        }
-
-        @Override
-        public boolean supportsReflectionSizeOf() {
-            return false;
-        }
-    },
-
-    /**
-     * Represents 64-Bit JRockit JVM (with no reference compression)
-     */
-    JROCKIT_64_BIT(JROCKIT_32_BIT) {
-
-        @Override
-        public int getObjectHeaderSize() {
-            return 16;
-        }
-
-        @Override
-        public String getJvmDescription() {
-            return "64-Bit JRockit JVM (with no reference compression)";
-        }
-    },
-
-    /**
-     * Represents 64-Bit JRockit JVM with 64GB Compressed References
-     */
-    JROCKIT_64_BIT_WITH_64GB_COMPRESSED_REFS(JROCKIT_32_BIT) {
-
-
-        @Override
-        public int getObjectAlignment() {
-            return 16;
-        }
-
-        @Override
-        public int getAgentSizeOfAdjustment() {
-            return 16;
-        }
-
-        @Override
-        public int getFieldOffsetAdjustment() {
-            return 16;
-        }
-
-        @Override
-        public int getObjectHeaderSize() {
-            return 24;
-        }
-
-        @Override
-        public String getJvmDescription() {
-            return "64-Bit JRockit JVM with 64GB Compressed References";
-        }
-    },
-
-    /**
      * Represents IBM 32-bit
      */
     IBM_32_BIT(UNKNOWN_32_BIT) {
@@ -527,9 +448,6 @@ public enum JvmInformation {
         }
 
         if (jif == null) {
-            jif = detectJRockit();
-        }
-        if (jif == null) {
             jif = detectIBM();
         }
 
@@ -590,24 +508,6 @@ public enum JvmInformation {
                 } else {
                     jif = OPENJDK_32_BIT;
                 }
-            }
-        }
-
-        return jif;
-    }
-
-    private static JvmInformation detectJRockit() {
-        JvmInformation jif = null;
-
-        if (isJRockit()) {
-            if (is64Bit()) {
-                if (isJRockit64GBCompression()) {
-                    jif = JROCKIT_64_BIT_WITH_64GB_COMPRESSED_REFS;
-                } else {
-                    jif = JROCKIT_64_BIT;
-                }
-            } else {
-                jif = JROCKIT_32_BIT;
             }
         }
 
