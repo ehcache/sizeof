@@ -144,9 +144,9 @@
                     <version>0.12</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.gmaven</groupId>
-                    <artifactId>gmaven-plugin</artifactId>
-                    <version>1.5</version>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>1.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -197,8 +197,8 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>gmaven-plugin</artifactId>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>create-agent-jar</id>
@@ -207,21 +207,32 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <source>
-                                def jarFile = new File(project.build.directory, "/classes/org/ehcache/sizeof/impl/sizeof-agent.jar")
-                                def agentClass = "/org/ehcache/sizeof/impl/SizeOfAgent.class"
-                                def agentDir = project.build.directory + "/agent-jar"
-                                def manifestDir = project.basedir.getAbsolutePath() + "/src/hidden/resources"
-                                ant.move(file: new File(project.build.outputDirectory, agentClass),
-                                        tofile: new File(agentDir, agentClass))
+                            <scripts>
+                                <script>
+                                    def jarFile = new File(project.build.directory, "/classes/org/ehcache/sizeof/impl/sizeof-agent.jar")
+                                    def agentClass = "/org/ehcache/sizeof/impl/SizeOfAgent.class"
+                                    def agentDir = project.build.directory + "/agent-jar"
+                                    def manifestDir = project.basedir.getAbsolutePath() + "/src/hidden/resources"
+                                    ant.move(file: new File(project.build.outputDirectory, agentClass),
+                                    tofile: new File(agentDir, agentClass))
 
-                                ant.jar(destfile: jarFile, basedir: new File(agentDir).getAbsolutePath(), manifest: new File(manifestDir, "/META-INF/MANIFEST.MF"))
+                                    ant.jar(destfile: jarFile, basedir: new File(agentDir).getAbsolutePath(), manifest: new File(manifestDir, "/META-INF/MANIFEST.MF"))
 
-                                ant.delete(dir: new File(agentDir))
-                            </source>
+                                    ant.delete(dir: new File(agentDir))
+                                </script>
+                            </scripts>
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <!-- any version of Groovy \>= 1.5.0 should work here -->
+                        <version>2.4.12</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
