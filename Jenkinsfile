@@ -15,4 +15,4 @@
  */
 
 //See Jenkins wiki pages for info
-mavenBuildOSS()
+mavenBuildOSS ws: "dyn-short"
