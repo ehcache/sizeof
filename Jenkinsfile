@@ -15,4 +15,4 @@
  */
 
 //See Jenkins wiki pages for info
-mavenBuildOSS ws: "dyn-eh-sizeof"
+mavenBuildOSS()
