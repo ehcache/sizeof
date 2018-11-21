@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.IdentityHashMap;
+import java.util.Set;
+
+import static java.util.Collections.newSetFromMap;
 
 /**
  * This will walk an object graph and let you execute some "function" along the way
@@ -39,7 +42,6 @@ final class ObjectGraphWalker {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectGraphWalker.class);
     private static final String VERBOSE_DEBUG_LOGGING = "org.ehcache.sizeof.verboseDebugLogging";
-    private static final Object VISITED = new Object();
 
     private static final String CONTINUE_MESSAGE =
         "The configured limit of {0} object references was reached while attempting to calculate the size of the object graph." +
@@ -140,7 +142,7 @@ final class ObjectGraphWalker {
         }
         long result = 0;
         Deque<Object> toVisit = new ArrayDeque<>();
-        IdentityHashMap<Object, Object> visited = new IdentityHashMap<>();
+        Set<Object> visited = newSetFromMap(new IdentityHashMap<>());
 
         if (root != null) {
             if (traversalDebugMessage != null) {
@@ -162,38 +164,36 @@ final class ObjectGraphWalker {
 
             Object ref = toVisit.pop();
 
-            if (visited.put(ref, VISITED) == VISITED) {
-                continue;
-            }
-
-            Class<?> refClass = ref.getClass();
-            if (!byPassIfFlyweight(ref) && shouldWalkClass(refClass)) {
-                if (refClass.isArray() && !refClass.getComponentType().isPrimitive()) {
-                    for (int i = 0; i < Array.getLength(ref); i++) {
-                        nullSafeAdd(toVisit, Array.get(ref, i));
-                    }
-                } else {
-                    for (Field field : getFilteredFields(refClass)) {
-                        try {
-                            nullSafeAdd(toVisit, field.get(ref));
-                        } catch (IllegalAccessException ex) {
-                            throw new RuntimeException(ex);
+            if (visited.add(ref)) {
+                Class<?> refClass = ref.getClass();
+                if (!byPassIfFlyweight(ref) && shouldWalkClass(refClass)) {
+                    if (refClass.isArray() && !refClass.getComponentType().isPrimitive()) {
+                        for (int i = 0; i < Array.getLength(ref); i++) {
+                            nullSafeAdd(toVisit, Array.get(ref, i));
+                        }
+                    } else {
+                        for (Field field : getFilteredFields(refClass)) {
+                            try {
+                                nullSafeAdd(toVisit, field.get(ref));
+                            } catch (IllegalAccessException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
                     }
-                }
 
-                final long visitSize = visitor.visit(ref);
-                if (visitorListener != null) {
-                    visitorListener.visited(ref, visitSize);
-                }
-                if (traversalDebugMessage != null) {
-                    traversalDebugMessage.append("  ").append(visitSize).append("b\t\t")
+                    final long visitSize = visitor.visit(ref);
+                    if (visitorListener != null) {
+                        visitorListener.visited(ref, visitSize);
+                    }
+                    if (traversalDebugMessage != null) {
+                        traversalDebugMessage.append("  ").append(visitSize).append("b\t\t")
+                            .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
+                    }
+                    result += visitSize;
+                } else if (traversalDebugMessage != null) {
+                    traversalDebugMessage.append("  ignored\t")
                         .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
                 }
-                result += visitSize;
-            } else if (traversalDebugMessage != null) {
-                traversalDebugMessage.append("  ignored\t")
-                    .append(ref.getClass().getName()).append("@").append(System.identityHashCode(ref)).append("\n");
             }
         }
 
