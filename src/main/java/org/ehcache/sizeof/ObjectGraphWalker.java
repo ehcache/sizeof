@@ -263,6 +263,14 @@ final class ObjectGraphWalker {
                         LOG.error("Security settings prevent Ehcache from accessing the subgraph beneath '{}'" +
                                   " - cache sizes may be underestimated as a result", field, e);
                         continue;
+                    } catch (RuntimeException e) {
+                        // new class (jdk9+ only) can be thrown
+                        if (e.getClass().getSimpleName() == "InaccessibleObjectException") {
+                            LOG.error("Field access cannot be enabled. This prevents Ehcache from accessing "
+                                    + "the subgraph beneath '{}' - cache sizes may be underestimated as a result",
+                                    field, e);
+                            continue;
+                        }
                     }
                     fields.add(field);
                 }
