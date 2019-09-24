@@ -265,7 +265,7 @@ final class ObjectGraphWalker {
                         continue;
                     } catch (RuntimeException e) {
                         // new class (jdk9+ only) can be thrown
-                        if (e.getClass().getSimpleName() == "InaccessibleObjectException") {
+                        if ("InaccessibleObjectException".equals(e.getClass().getSimpleName())) {
                             LOG.error("Field access cannot be enabled. This prevents Ehcache from accessing "
                                     + "the subgraph beneath '{}' - cache sizes may be underestimated as a result",
                                     field, e);
