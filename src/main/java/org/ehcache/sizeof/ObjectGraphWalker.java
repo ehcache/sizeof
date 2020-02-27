@@ -39,22 +39,6 @@ final class ObjectGraphWalker {
 
     private static final Logger LOG = LoggerFactory.getLogger(ObjectGraphWalker.class);
     private static final String VERBOSE_DEBUG_LOGGING = "org.ehcache.sizeof.verboseDebugLogging";
-
-    private static final String CONTINUE_MESSAGE =
-        "The configured limit of {0} object references was reached while attempting to calculate the size of the object graph." +
-        " Severe performance degradation could occur if the sizing operation continues. This can be avoided by setting the CacheManger" +
-        " or Cache <sizeOfPolicy> element's maxDepthExceededBehavior to \"abort\" or adding stop points with @IgnoreSizeOf annotations." +
-        " If performance degradation is NOT an issue at the configured limit, raise the limit value using the CacheManager or Cache" +
-        " <sizeOfPolicy> element's maxDepth attribute. For more information, see the Ehcache configuration documentation.";
-
-
-    private static final String ABORT_MESSAGE =
-        "The configured limit of {0} object references was reached while attempting to calculate the size of the object graph." +
-        " This can be avoided by adding stop points with @IgnoreSizeOf annotations. Since the CacheManger or Cache <sizeOfPolicy>" +
-        " element's maxDepthExceededBehavior is set to \"abort\", the sizing operation has stopped and the reported cache size is not" +
-        " accurate. If performance degradation is NOT an issue at the configured limit, raise the limit value using the CacheManager" +
-        " or Cache <sizeOfPolicy> element's maxDepth attribute. For more information, see the Ehcache configuration documentation.";
-
     private static final boolean USE_VERBOSE_DEBUG_LOGGING;
 
     private final WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Field>>> fieldCache =
