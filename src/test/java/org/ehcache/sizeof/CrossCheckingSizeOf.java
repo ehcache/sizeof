@@ -16,60 +16,53 @@
 package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.SizeOfFilter;
-import org.ehcache.sizeof.impl.AgentSizeOf;
+import org.ehcache.sizeof.impl.AgentSizer;
+import org.ehcache.sizeof.impl.JvmInformation;
 import org.ehcache.sizeof.impl.PassThroughFilter;
-import org.ehcache.sizeof.impl.ReflectionSizeOf;
-import org.ehcache.sizeof.impl.UnsafeSizeOf;
+import org.ehcache.sizeof.impl.ReflectionSizer;
+import org.ehcache.sizeof.impl.UnsafeSizer;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Alex Snaps
  */
 public class CrossCheckingSizeOf extends SizeOf {
 
-    private final List<SizeOf> engines;
+    private final List<ObjectSizer> engines;
+
+    public static Stream<ObjectSizer> objectSizers() {
+        if (JvmInformation.CURRENT_JVM_INFORMATION.supportsReflectionSizeOf()) {
+            return Stream.of(new AgentSizer(), new UnsafeSizer(), new ReflectionSizer());
+        } else {
+            return Stream.of(new AgentSizer(), new UnsafeSizer());
+        }
+    }
 
     public CrossCheckingSizeOf() {
         this(new PassThroughFilter());
     }
 
+    public CrossCheckingSizeOf(Stream<ObjectSizer> sizers) {
+        this(new PassThroughFilter(), true, true, sizers);
+    }
+
     public CrossCheckingSizeOf(boolean bypassFlyweight) {
-        this(new PassThroughFilter(), true, bypassFlyweight);
+        this(new PassThroughFilter(), true, bypassFlyweight, objectSizers());
     }
 
     public CrossCheckingSizeOf(SizeOfFilter filter) {
-        this(filter, true, true);
+        this(filter, true, true, objectSizers());
     }
 
-    public CrossCheckingSizeOf(SizeOfFilter filter, boolean caching, boolean bypassFlyweight) {
+
+    private CrossCheckingSizeOf(SizeOfFilter filter, boolean caching, boolean bypassFlyweight, Stream<ObjectSizer> sizerFactories) {
         super(filter, caching, bypassFlyweight);
-        engines = new ArrayList<>();
-
-        try {
-            engines.add(new AgentSizeOf());
-        } catch (UnsupportedOperationException usoe) {
-            System.err.println("Not using AgentSizeOf: " + usoe);
-        }
-        try {
-            engines.add(new UnsafeSizeOf());
-        } catch (UnsupportedOperationException usoe) {
-            System.err.println("Not using UnsafeSizeOf: " + usoe);
-        }
-        if (CURRENT_JVM_INFORMATION.supportsReflectionSizeOf()) {
-            try {
-                engines.add(new ReflectionSizeOf());
-            } catch (UnsupportedOperationException usoe) {
-                System.err.println("Not using ReflectionSizeOf: " + usoe);
-            }
-        } else {
-            System.err.println(CURRENT_JVM_INFORMATION.getJvmDescription() + " detected: not using ReflectionSizeOf");
-        }
-
+        this.engines = sizerFactories.collect(toList());
         if (engines.isEmpty()) {
             throw new AssertionError("No SizeOf engines available");
         }

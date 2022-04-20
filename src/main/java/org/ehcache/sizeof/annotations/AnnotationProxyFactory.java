@@ -17,6 +17,7 @@ package org.ehcache.sizeof.annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -25,20 +26,21 @@ import java.lang.reflect.Proxy;
  * It can come handy when you want to allow the consumers of your library not to depend on your API because of the annotations, still allowing them to use the original annotation methods.
  * <p/>
  * Example :
- * <p/>
+ * <pre>{@code
  * //getting a custom annotation from a class
  * my.Annotation customAnnotation = klazz.getAnnotation(my.Annotation.class);
- * //if this annotation is "similar" (duck-typing, same methods) to the reference one, I can get a proxy to it, whose type is the reference annotation
+ * //if this annotation is "similar" (duck-typing, same methods) to the reference one,
+ * //I can get a proxy to it, whose type is the reference annotation
  * ehcache.Annotation annotation = AnnotationProxyFactory.getAnnotationProxy(customAnnotation, ehcache.Annotation.class);
- * <p/>
- * //so my library can apply the behavior when the default annotation is used
  *
- * @author Anthony Dahanne
+ * //so my library can apply the behavior when the default annotation is used
  * @ehcache.Annotation(action="true") public class UserClass {}
- * <p/>
- * //or when a custom one is used, since all calls to action() will be caught and redirected to the custom annotation action method, if it exists,
+ *
+ * //or when a custom one is used, since all calls to action() will be caught
+ * //and redirected to the custom annotation action method, if it exists,
  * //or fall back to the reference action method
  * @my.Annotation(action="true") public class UserClass {}
+ * }</pre>
  */
 public final class AnnotationProxyFactory {
 
@@ -48,7 +50,7 @@ public final class AnnotationProxyFactory {
     }
 
     /**
-     * Returns a proxy on the customAnnotation, having the same type than the referenceAnnotation
+     * Returns a proxy on the customAnnotation, having the same type as the referenceAnnotation
      *
      * @param customAnnotation annotation proxied
      * @param referenceAnnotation type of the returned annotation
@@ -72,7 +74,7 @@ public final class AnnotationProxyFactory {
             this.customAnnotation = customAnnotation;
         }
 
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+        public Object invoke(final Object proxy, final Method method, final Object[] args) throws InvocationTargetException, IllegalAccessException {
             //trying to call the method on the custom annotation, if it exists
             Method methodOnCustom = getMatchingMethodOnGivenAnnotation(method);
             if (methodOnCustom != null) {

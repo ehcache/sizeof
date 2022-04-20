@@ -15,6 +15,8 @@
  */
 package org.ehcache.sizeof;
 
+import org.ehcache.sizeof.util.UnsafeAccess;
+import sun.misc.Unsafe;
 import org.ehcache.sizeof.filters.SizeOfFilter;
 import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.IdentityHashMap;
 import java.util.Set;
+import java.util.function.Function;
 
 import static java.util.Collections.newSetFromMap;
 
@@ -44,7 +47,7 @@ final class ObjectGraphWalker {
     private static final String VERBOSE_DEBUG_LOGGING = "org.ehcache.sizeof.verboseDebugLogging";
     private static final boolean USE_VERBOSE_DEBUG_LOGGING;
 
-    private final WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Field>>> fieldCache =
+    private final WeakIdentityConcurrentMap<Class<?>, SoftReference<Collection<Function<Object, Object>>>> fieldCache =
         new WeakIdentityConcurrentMap<>();
     private final WeakIdentityConcurrentMap<Class<?>, Boolean> classCache =
         new WeakIdentityConcurrentMap<>();
@@ -156,12 +159,8 @@ final class ObjectGraphWalker {
                             nullSafeAdd(toVisit, Array.get(ref, i));
                         }
                     } else {
-                        for (Field field : getFilteredFields(refClass)) {
-                            try {
-                                nullSafeAdd(toVisit, field.get(ref));
-                            } catch (IllegalAccessException ex) {
-                                throw new RuntimeException(ex);
-                            }
+                        for (Function<Object, Object> accessor : getFilteredFields(refClass)) {
+                            nullSafeAdd(toVisit, accessor.apply(ref));
                         }
                     }
 
@@ -194,23 +193,66 @@ final class ObjectGraphWalker {
      * @param refClass the type
      * @return A collection of fields to be visited
      */
-    private Collection<Field> getFilteredFields(Class<?> refClass) {
-        SoftReference<Collection<Field>> ref = fieldCache.get(refClass);
-        Collection<Field> fieldList = ref != null ? ref.get() : null;
+    private Collection<Function<Object, Object>> getFilteredFields(Class<?> refClass) {
+        SoftReference<Collection<Function<Object, Object>>> ref = fieldCache.get(refClass);
+        Collection<Function<Object, Object>> fieldList = ref != null ? ref.get() : null;
         if (fieldList != null) {
             return fieldList;
         } else {
-            Collection<Field> result;
-            result = sizeOfFilter.filterFields(refClass, getAllFields(refClass));
+            Collection<Field> fields = sizeOfFilter.filterFields(refClass, getAllFields(refClass));
+            Collection<Function<Object, Object>> accessors = new ArrayList<>(fields.size());
             if (USE_VERBOSE_DEBUG_LOGGING && LOG.isDebugEnabled()) {
-                for (Field field : result) {
+                for (Field field : fields) {
                     if (Modifier.isTransient(field.getModifiers())) {
                         LOG.debug("SizeOf engine walking transient field '{}' of class {}", field.getName(), refClass.getName());
                     }
                 }
             }
-            fieldCache.put(refClass, new SoftReference<>(result));
-            return result;
+
+            for (Field field : fields) {
+                try {
+                    try {
+                        accessors.add(readUsingReflection(field));
+                    } catch (Throwable t) {
+                        Function<Object, Object> unsafeRead = readUsingUnsafe(field);
+                        if (unsafeRead == null) {
+                            throw t;
+                        } else {
+                            accessors.add(unsafeRead);
+                        }
+                    }
+                } catch (SecurityException e) {
+                    LOG.error("Security settings prevent Ehcache from accessing the subgraph beneath '{}'" +
+                            " - cache sizes may be underestimated as a result", field, e);
+                } catch (Throwable e) {
+                    LOG.warn("The JVM is preventing Ehcache from accessing the subgraph beneath '{}'" +
+                            " - cache sizes may be underestimated as a result", field, e);
+                }
+            }
+
+            fieldCache.put(refClass, new SoftReference<>(accessors));
+            return accessors;
+        }
+    }
+
+    private static Function<Object, Object> readUsingReflection(Field field) throws SecurityException {
+        field.setAccessible(true);
+        return ref -> {
+            try {
+                return field.get(ref);
+            } catch (IllegalAccessException e) {
+                throw new AssertionError("IllegalAccessException after setting accessible!", e);
+            }
+        };
+    }
+
+    private static Function<Object, Object> readUsingUnsafe(Field field) {
+        Unsafe unsafe = UnsafeAccess.getUnsafe();
+        if (unsafe == null) {
+            return null;
+        } else {
+            long offset = unsafe.objectFieldOffset(field);
+            return ref -> unsafe.getObject(ref, offset);
         }
     }
 
@@ -241,17 +283,6 @@ final class ObjectGraphWalker {
             for (Field field : klazz.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers()) &&
                     !field.getType().isPrimitive()) {
-                    try {
-                        field.setAccessible(true);
-                    } catch (SecurityException e) {
-                        LOG.error("Security settings prevent Ehcache from accessing the subgraph beneath '{}'" +
-                                  " - cache sizes may be underestimated as a result", field, e);
-                        continue;
-                    } catch (RuntimeException e) {
-                        LOG.warn("The JVM is preventing Ehcache from accessing the subgraph beneath '{}'" +
-                                " - cache sizes may be underestimated as a result", field, e);
-                        continue;
-                    }
                     fields.add(field);
                 }
             }

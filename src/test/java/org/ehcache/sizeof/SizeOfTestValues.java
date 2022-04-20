@@ -140,6 +140,60 @@ public class SizeOfTestValues {
         CORRECT_SIZES.put(JvmInformation.HOTSPOT_64_BIT_WITH_COMPRESSED_OOPS_AND_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCompressedOopsAndCMS);
         CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_AND_CONCURRENT_MARK_AND_SWEEP, hotspot64BitWithCompressedOopsAndCMS);
 
+        Map<String, Long> openjdk32BitNewLayout = new HashMap<>();
+        openjdk32BitNewLayout.put("sizeOf(new Object())", 8L);
+        openjdk32BitNewLayout.put("sizeOf(new Integer(1))", 16L);
+        openjdk32BitNewLayout.put("sizeOf(1000)", 16L);
+        openjdk32BitNewLayout.put("deepSizeOf(new SomeClass(false))", 16L);
+        openjdk32BitNewLayout.put("deepSizeOf(new SomeClass(true))", 24L);
+        openjdk32BitNewLayout.put("sizeOf(new Object[] { })", 16L);
+        openjdk32BitNewLayout.put("sizeOf(new Object[] { new Object(), new Object(), new Object(), new Object() })", 32L);
+        openjdk32BitNewLayout.put("sizeOf(new int[] { })", 16L);
+        openjdk32BitNewLayout.put("sizeOf(new int[] { 987654, 876543, 765432, 654321 })", 32L);
+        openjdk32BitNewLayout.put("deepSizeOf(new Pair(null, null))", 16L);
+        openjdk32BitNewLayout.put("deepSizeOf(new Pair(new Object(), null))", 24L);
+        openjdk32BitNewLayout.put("deepSizeOf(new Pair(new Object(), new Object()))", 32L);
+        openjdk32BitNewLayout.put("deepSizeOf(new ReentrantReadWriteLock())", 112L);
+        openjdk32BitNewLayout.put("sizeOf(javaRecord())", 24L);
+
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_32_BIT_NEW_LAYOUT, openjdk32BitNewLayout);
+
+        Map<String, Long> openjdk64BitNewLayout = new HashMap<>();
+        openjdk64BitNewLayout.put("sizeOf(new Object())", 16L);
+        openjdk64BitNewLayout.put("sizeOf(new Integer(1))", 24L);
+        openjdk64BitNewLayout.put("sizeOf(1000)", 24L);
+        openjdk64BitNewLayout.put("deepSizeOf(new SomeClass(false))", 24L);
+        openjdk64BitNewLayout.put("deepSizeOf(new SomeClass(true))", 40L);
+        openjdk64BitNewLayout.put("sizeOf(new Object[] { })", 24L);
+        openjdk64BitNewLayout.put("sizeOf(new Object[] { new Object(), new Object(), new Object(), new Object() })", 56L);
+        openjdk64BitNewLayout.put("sizeOf(new int[] { })", 24L);
+        openjdk64BitNewLayout.put("sizeOf(new int[] { 987654, 876543, 765432, 654321 })", 40L);
+        openjdk64BitNewLayout.put("deepSizeOf(new Pair(null, null))", 32L);
+        openjdk64BitNewLayout.put("deepSizeOf(new Pair(new Object(), null))", 48L);
+        openjdk64BitNewLayout.put("deepSizeOf(new Pair(new Object(), new Object()))", 64L);
+        openjdk64BitNewLayout.put("deepSizeOf(new ReentrantReadWriteLock())", 192L);
+        openjdk64BitNewLayout.put("sizeOf(javaRecord())", 24L);
+
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_NEW_LAYOUT, openjdk64BitNewLayout);
+
+        Map<String, Long> openjdk64BitWithCompressedOopsNewLayout = new HashMap<>();
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(new Object())", 16L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(new Integer(1))", 16L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(1000)", 16L);
+        openjdk64BitWithCompressedOopsNewLayout.put("deepSizeOf(new SomeClass(false))", 16L);
+        openjdk64BitWithCompressedOopsNewLayout.put("deepSizeOf(new SomeClass(true))", 32L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(new Object[] { })", 16L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(new Object[] { new Object(), new Object(), new Object(), new Object() })", 32L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(new int[] { })", 16L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(new int[] { 987654, 876543, 765432, 654321 })", 32L);
+        openjdk64BitWithCompressedOopsNewLayout.put("deepSizeOf(new Pair(null, null))", 24L);
+        openjdk64BitWithCompressedOopsNewLayout.put("deepSizeOf(new Pair(new Object(), null))", 40L);
+        openjdk64BitWithCompressedOopsNewLayout.put("deepSizeOf(new Pair(new Object(), new Object()))", 56L);
+        openjdk64BitWithCompressedOopsNewLayout.put("deepSizeOf(new ReentrantReadWriteLock())", 120L);
+        openjdk64BitWithCompressedOopsNewLayout.put("sizeOf(javaRecord())", 24L);
+
+        CORRECT_SIZES.put(JvmInformation.OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_NEW_LAYOUT, openjdk64BitWithCompressedOopsNewLayout);
+
         Map<String, Long> ibm32Bit = new HashMap<>();
         ibm32Bit.put("sizeOf(new Object())", 16L);
         ibm32Bit.put("sizeOf(new Integer(1))", 16L);

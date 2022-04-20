@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright Terracotta, Inc.
   ~
@@ -15,16 +15,19 @@
   ~ limitations under the License.
   -->
 
-<FindBugsFilter>
-
-  <FindBugsFilter>
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/4.7.0/spotbugs/etc/findbugsfilter.xsd">
     <Match>
-      <Class name="~org\.ehcache\.sizeof\.FlyweightType.*"/>
+        <Class name="~org\.ehcache\.sizeof\.FlyweightType.*"/>
     </Match>
     <Match>
-      <Class name="org.ehcache.sizeof.Configuration"/>
-      <Method name="getFilters" />
+        <Class name="org.ehcache.sizeof.Configuration"/>
+        <Method name="getFilters"/>
     </Match>
-  </FindBugsFilter>
-
+    <Match>
+        <Class name="org.ehcache.sizeof.util.UnsafeAccess"/>
+        <Method name="getUnsafe"/>
+        <Bug pattern="MS_EXPOSE_REP"/>
+    </Match>
 </FindBugsFilter>
