@@ -15,7 +15,9 @@
  */
 package org.ehcache.sizeof;
 
+import sun.misc.Unsafe;
 import org.ehcache.sizeof.filters.SizeOfFilter;
+import org.ehcache.sizeof.impl.UnsafeSizeOf;
 import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,11 +159,7 @@ final class ObjectGraphWalker {
                         }
                     } else {
                         for (Field field : getFilteredFields(refClass)) {
-                            try {
-                                nullSafeAdd(toVisit, field.get(ref));
-                            } catch (IllegalAccessException ex) {
-                                throw new RuntimeException(ex);
-                            }
+                            nullSafeAdd(toVisit, getNonPrimitiveValue(ref, field));
                         }
                     }
 
@@ -241,22 +239,46 @@ final class ObjectGraphWalker {
             for (Field field : klazz.getDeclaredFields()) {
                 if (!Modifier.isStatic(field.getModifiers()) &&
                     !field.getType().isPrimitive()) {
-                    try {
-                        field.setAccessible(true);
-                    } catch (SecurityException e) {
-                        LOG.error("Security settings prevent Ehcache from accessing the subgraph beneath '{}'" +
-                                  " - cache sizes may be underestimated as a result", field, e);
-                        continue;
-                    } catch (RuntimeException e) {
-                        LOG.warn("The JVM is preventing Ehcache from accessing the subgraph beneath '{}'" +
-                                " - cache sizes may be underestimated as a result", field, e);
-                        continue;
-                    }
                     fields.add(field);
                 }
             }
         }
         return fields;
+    }
+
+    /**
+     * Returns the value of the non-primitive field in the given instance.
+     * Should be used with {@link #getAllFields} to make sure the field is non-static and non-primitive.
+     *
+     * @param ref instance to get field value from
+     * @param field field descriptor
+     * @return the value object. null if we fail to get the value.
+     */
+    private static Object getNonPrimitiveValue(Object ref, Field field) {
+        Unsafe unsafe = UnsafeSizeOf.getUnsafe();
+        boolean noUnsafe = unsafe == null;
+        try {
+            field.setAccessible(true);
+            return field.get(ref);
+        } catch (SecurityException e) {
+            if (noUnsafe) {
+                LOG.error("Security settings prevent Ehcache from accessing the subgraph beneath '{}'" +
+                          " - cache sizes may be underestimated as a result", field, e);
+                return null;
+            }
+        } catch (RuntimeException e) {
+            if (noUnsafe) {
+                LOG.warn("The JVM is preventing Ehcache from accessing the subgraph beneath '{}'" +
+                         " - cache sizes may be underestimated as a result", field, e);
+                return null;
+            }
+        } catch (IllegalAccessException e) {
+            if (noUnsafe) {
+                throw new RuntimeException(e);
+            }
+        }
+        long offset = unsafe.objectFieldOffset(field);
+        return unsafe.getObject(ref, offset);
     }
 
     private boolean byPassIfFlyweight(Object obj) {

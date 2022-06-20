@@ -53,6 +53,10 @@ public class UnsafeSizeOf extends SizeOf {
         UNSAFE = unsafe;
     }
 
+    public static Unsafe getUnsafe() {
+        return UNSAFE;
+    }
+
     /**
      * Builds a new SizeOf that will not filter fields and will cache reflected fields
      *
