@@ -24,18 +24,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.DynamicType;
 import org.junit.Test;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
-
-import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
-import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.V1_6;
 
 /**
  *
@@ -94,43 +85,21 @@ public class CrossCheckingSizeOfIT {
   }
   
   private static Class<?> generateClassHierarchy(List<List<Class<?>>> classes) {
-    TestClassLoader loader = new TestClassLoader();
-  
-    String superClassDesc = "java/lang/Object";
+    ByteBuddy byteBuddy = new ByteBuddy();
+
+    Class<?> type = Object.class;
     int classIndex = 0;
-    
+
     for (List<Class<?>> fields : classes) {
-      String classDesc = "A" + classIndex++;
-      ClassWriter cw = new ClassWriter(COMPUTE_MAXS | COMPUTE_FRAMES);
-      cw.visit(V1_6, ACC_PUBLIC, classDesc, null, superClassDesc, null);
-      MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-      mv.visitCode();
-      mv.visitVarInsn(ALOAD, 0);
-      mv.visitMethodInsn(INVOKESPECIAL, superClassDesc, "<init>", "()V", false);
-      mv.visitInsn(RETURN);
-      mv.visitMaxs(1, 1);
-      mv.visitEnd();
+      DynamicType.Builder<?> builder = byteBuddy.subclass(type).name("A" + classIndex++);
 
       int fieldIndex = 0;
       for (Class<?> field : fields) {
-        cw.visitField(ACC_PUBLIC, "a" + fieldIndex++, Type.getDescriptor(field), null, null);
+        builder = builder.defineField("a" + fieldIndex++, field);
       }
-      cw.visitEnd();
-      loader.defineClass(classDesc, cw.toByteArray());
-      superClassDesc = classDesc;
+      type = builder.make().load(type.getClassLoader()).getLoaded();
     }
     
-    try {
-      return loader.loadClass("A" + (classIndex - 1));
-    } catch (ClassNotFoundException | NoClassDefFoundError e) {
-      throw new AssertionError(e);
-    }
-  }
-  
-  private static class TestClassLoader extends ClassLoader {
-    
-    public void defineClass(String name, byte[] classbytes) {
-      defineClass(name, classbytes, 0, classbytes.length);
-    }
+    return type;
   }
 }

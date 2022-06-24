@@ -17,10 +17,19 @@ package org.ehcache.sizeof;
 
 import org.ehcache.sizeof.filters.CombinationSizeOfFilter;
 import org.ehcache.sizeof.filters.SizeOfFilter;
-import org.ehcache.sizeof.impl.AgentSizeOf;
-import org.ehcache.sizeof.impl.ReflectionSizeOf;
-import org.ehcache.sizeof.impl.UnsafeSizeOf;
+import org.ehcache.sizeof.impl.AgentSizer;
+import org.ehcache.sizeof.impl.ReflectionSizer;
+import org.ehcache.sizeof.impl.UnsafeSizer;
 import org.ehcache.sizeof.util.WeakIdentityConcurrentMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Abstract sizeOf for Java. It will rely on a proper sizeOf to measure sizes of entire object graphs
@@ -79,20 +88,11 @@ public abstract class SizeOf {
     }
 
     public static SizeOf newInstance(boolean bypassFlyweight, boolean cache, final SizeOfFilter... filters) {
-        final SizeOfFilter filter = new CombinationSizeOfFilter(filters);
-        try {
-            return new AgentSizeOf(filter, cache, bypassFlyweight);
-        } catch (UnsupportedOperationException e) {
-            try {
-                return new UnsafeSizeOf(filter, cache, bypassFlyweight);
-            } catch (UnsupportedOperationException f) {
-                try {
-                    return new ReflectionSizeOf(filter, cache, bypassFlyweight);
-                } catch (UnsupportedOperationException g) {
-                    throw new UnsupportedOperationException("A suitable SizeOf engine could not be loaded: " + e + ", " + f + ", " + g);
-                }
-            }
-        }
+        return new DelegatingSizeOf(new CombinationSizeOfFilter(filters), cache, bypassFlyweight,
+                AgentSizer::new,
+                UnsafeSizer::new,
+                ReflectionSizer::new
+        );
     }
 
     /**
@@ -131,6 +131,51 @@ public abstract class SizeOf {
             } else {
                 return cachedSize;
             }
+        }
+    }
+
+    private static class DelegatingSizeOf extends SizeOf {
+
+        private static final Logger LOGGER = LoggerFactory.getLogger(DelegatingSizeOf.class);
+
+        private final List<ObjectSizer> sizers;
+
+        /**
+         * Builds a new SizeOf that will filter fields according to the provided filter
+         *
+         * @param fieldFilter     The filter to apply
+         * @param caching         whether to cache reflected fields
+         * @param bypassFlyweight whether "Flyweight Objects" are to be ignored
+         * @see SizeOfFilter
+         */
+        public DelegatingSizeOf(SizeOfFilter fieldFilter, boolean caching, boolean bypassFlyweight, Supplier<ObjectSizer>... sizerFactories) {
+            super(fieldFilter, caching, bypassFlyweight);
+            this.sizers = Stream.of(sizerFactories).map(s -> {
+                try {
+                    return s.get();
+                } catch (Throwable t) {
+                    LOGGER.warn("Cannot use object sizing " + s, t);
+                    return null;
+                }
+            }).filter(Objects::nonNull).collect(toList());
+
+            if (sizers.isEmpty()) {
+                throw new UnsupportedOperationException("A suitable sizing engine could not be loaded");
+            }
+        }
+
+        @Override
+        public long sizeOf(Object obj) {
+
+            for (ObjectSizer sizer : sizers) {
+                try {
+                    return sizer.sizeOf(obj);
+                } catch (Throwable t) {
+                    LOGGER.warn("Failed to size {} with {}", obj, sizer);
+                }
+            }
+
+            throw new UnsupportedOperationException("Could not size " + obj);
         }
     }
 }

@@ -15,12 +15,16 @@
  */
 package org.ehcache.sizeof;
 
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.ClassFileVersion;
 import org.ehcache.sizeof.impl.JvmInformation;
+import org.ehcache.sizeof.impl.UnsafeSizer;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
@@ -39,6 +43,8 @@ import java.util.logging.Logger;
 
 import javax.xml.datatype.DatatypeConstants;
 
+import static net.bytebuddy.ClassFileVersion.JAVA_V14;
+import static org.ehcache.sizeof.CrossCheckingSizeOf.objectSizers;
 import static org.ehcache.sizeof.impl.JvmInformation.CURRENT_JVM_INFORMATION;
 import static org.ehcache.sizeof.impl.JvmInformation.UNKNOWN_32_BIT;
 import static org.ehcache.sizeof.impl.JvmInformation.UNKNOWN_64_BIT;
@@ -78,7 +84,7 @@ public class SizeOfTest extends AbstractSizeOfTest {
     }
 
     @Test
-    public void testSizeOfFlyweight() throws Exception {
+    public void testSizeOfFlyweight() {
         SizeOf sizeOf = new CrossCheckingSizeOf(false);
         Assert.assertThat(deepSizeOf(sizeOf, 42), is(not(0L)));
     }
@@ -119,6 +125,10 @@ public class SizeOfTest extends AbstractSizeOfTest {
         assertThat(deepSizeOf(sizeOf, new Pair(new Object(), null)), "deepSizeOf(new Pair(new Object(), null))");
         assertThat(deepSizeOf(sizeOf, new Pair(new Object(), new Object())), "deepSizeOf(new Pair(new Object(), new Object()))");
         assertThat(deepSizeOf(sizeOf, new ReentrantReadWriteLock()), "deepSizeOf(new ReentrantReadWriteLock())");
+
+        if (ClassFileVersion.ofThisVm().isAtLeast(JAVA_V14)) {
+            assertThat(new CrossCheckingSizeOf(objectSizers().filter(s -> !(s instanceof UnsafeSizer))).sizeOf(javaRecord()), "sizeOf(javaRecord())");
+        }
 
         if (!sizeOfFailures.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -260,4 +270,13 @@ public class SizeOfTest extends AbstractSizeOfTest {
             this.copyTwo = two;
         }
     }
+
+    private Object javaRecord() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        return new ByteBuddy().makeRecord()
+                .defineRecordComponent("foo", Integer.TYPE)
+                .defineRecordComponent("bar", Long.TYPE)
+                .make().load(getClass().getClassLoader())
+                .getLoaded().getDeclaredConstructor(Integer.TYPE, Long.TYPE).newInstance(42, 42L);
+    }
+
 }

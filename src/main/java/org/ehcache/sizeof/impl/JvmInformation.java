@@ -25,6 +25,8 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 
+import static java.lang.Boolean.parseBoolean;
+
 /**
  * Detects and represents JVM-specific properties that relate to the memory
  * data model for java objects that are useful for size of calculations.
@@ -84,6 +86,11 @@ public enum JvmInformation {
         @Override
         public boolean supportsReflectionSizeOf() {
             return true;
+        }
+
+        @Override
+        public boolean usesNewObjectLayout() {
+            return false;
         }
     },
 
@@ -282,6 +289,54 @@ public enum JvmInformation {
     },
 
     /**
+     * Represents OpenJDK 32-bit
+     */
+    OPENJDK_32_BIT_NEW_LAYOUT(OPENJDK_32_BIT)  {
+
+        @Override
+        public boolean usesNewObjectLayout() {
+            return true;
+        }
+
+        @Override
+        public String getJvmDescription() {
+            return parent.getJvmDescription() + " (New Object Layout)";
+        }
+    },
+
+    /**
+     * Represents 64-Bit OpenJDK JVM
+     */
+    OPENJDK_64_BIT_NEW_LAYOUT(OPENJDK_64_BIT) {
+
+        @Override
+        public boolean usesNewObjectLayout() {
+            return true;
+        }
+
+        @Override
+        public String getJvmDescription() {
+            return parent.getJvmDescription() + " (New Object Layout)";
+        }
+    },
+
+    /**
+     * Represents 64-Bit OpenJDK JVM with Compressed OOPs
+     */
+    OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_NEW_LAYOUT(OPENJDK_64_BIT_WITH_COMPRESSED_OOPS) {
+
+        @Override
+        public boolean usesNewObjectLayout() {
+            return true;
+        }
+
+        @Override
+        public String getJvmDescription() {
+            return parent.getJvmDescription() + " (New Object Layout)";
+        }
+    },
+
+    /**
      * Represents IBM 32-bit
      */
     IBM_32_BIT(UNKNOWN_32_BIT) {
@@ -356,7 +411,7 @@ public enum JvmInformation {
         LOGGER.info("Detected JVM data model settings of: " + CURRENT_JVM_INFORMATION.getJvmDescription());
     }
 
-    private JvmInformation parent;
+    protected JvmInformation parent;
 
     JvmInformation(JvmInformation parent) {
         this.parent = parent;
@@ -409,6 +464,13 @@ public enum JvmInformation {
      */
     public int getAgentSizeOfAdjustment() {
         return parent.getAgentSizeOfAdjustment();
+    }
+
+    /**
+     * The size of the jvm-specific agent result adjustment in bytes.
+     */
+    public boolean usesNewObjectLayout() {
+        return parent.usesNewObjectLayout();
     }
 
     /**
@@ -493,7 +555,11 @@ public enum JvmInformation {
 
         if (isOpenJDK()) {
             if (is64Bit()) {
-                if (isHotspotCompressedOops() && isHotspotConcurrentMarkSweepGC()) {
+                if (isHotspotNewObjectLayout() && isHotspotCompressedOops()) {
+                    jif = OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_NEW_LAYOUT;
+                } else if (isHotspotNewObjectLayout()) {
+                    jif = OPENJDK_64_BIT_NEW_LAYOUT;
+                } else if (isHotspotCompressedOops() && isHotspotConcurrentMarkSweepGC()) {
                     jif = OPENJDK_64_BIT_WITH_COMPRESSED_OOPS_AND_CONCURRENT_MARK_AND_SWEEP;
                 } else if (isHotspotCompressedOops()) {
                     jif = OPENJDK_64_BIT_WITH_COMPRESSED_OOPS;
@@ -503,7 +569,9 @@ public enum JvmInformation {
                     jif = OPENJDK_64_BIT;
                 }
             } else {
-                if (isHotspotConcurrentMarkSweepGC()) {
+                if (isHotspotNewObjectLayout()) {
+                    jif = OPENJDK_32_BIT_NEW_LAYOUT;
+                } else if (isHotspotConcurrentMarkSweepGC()) {
                     jif = OPENJDK_32_BIT_WITH_CONCURRENT_MARK_AND_SWEEP;
                 } else {
                     jif = OPENJDK_32_BIT;
@@ -610,6 +678,15 @@ public enum JvmInformation {
             return false;
         } else {
             return Boolean.valueOf(value);
+        }
+    }
+
+    private static boolean isHotspotNewObjectLayout() {
+        String useNewFieldLayout = getHotSpotVmOptionValue("UseNewFieldLayout");
+        if (useNewFieldLayout == null) {
+            return parseBoolean(getHotSpotVmOptionValue("UseEmptySlotsInSupers"));
+        } else {
+            return !parseBoolean(useNewFieldLayout) && parseBoolean(getHotSpotVmOptionValue("UseEmptySlotsInSupers"));
         }
     }
 
