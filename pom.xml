@@ -336,6 +336,7 @@
                         <configuration>
                             <skip>${skipJavadoc}</skip>
                             <source>8</source>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
                         </configuration>
                     </execution>
                 </executions>
